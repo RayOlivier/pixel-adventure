@@ -4,10 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Flame.device.fullScreen();
-  Flame.device.setLandscape();
+  // await is very important for real devices, as it takes time to switch to landscape (but it works without await on emulators)
+  await Flame.device.fullScreen();
+  await Flame.device.setLandscape();
 
   PixelAdventure game = PixelAdventure();
   runApp(GameWidget(
