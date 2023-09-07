@@ -9,7 +9,7 @@ class Player extends SpriteAnimationGroupComponent
     with HasGameRef<PixelAdventure> {
   String character;
   // constructor
-  Player({required this.character});
+  Player({position, required this.character}) : super(position: position);
 
   late final SpriteAnimation idleAnimation;
   late final SpriteAnimation runningAnimation;

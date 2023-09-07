@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="5">
  <tileset firstgid="1" source="PixelAdventure.tsx"/>
  <layer id="1" name="Background" width="40" height="23">
   <data encoding="csv">
@@ -28,4 +28,7 @@
 112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112
 </data>
  </layer>
+ <objectgroup id="2" name="SpawnPoints">
+  <object id="4" name="Player" type="Player" x="112" y="240" width="32" height="32"/>
+ </objectgroup>
 </map>
