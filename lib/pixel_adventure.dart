@@ -14,8 +14,10 @@ class PixelAdventure extends FlameGame
   Color backgroundColor() => const Color(0xFF211F30);
 
   late final CameraComponent cam;
-  Player player = Player(character: 'Mask Dude');
+  Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
+  // @TODO: turn off joystick for desktop or make it a setting
+  bool showJoystick = true;
 
   @override
   FutureOr<void> onLoad() async {
@@ -30,9 +32,19 @@ class PixelAdventure extends FlameGame
 
     addAll([cam, world]);
 
-    addJoystick();
+    if (showJoystick) {
+      addJoystick();
+    }
 
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    if (showJoystick) {
+      updateJoystick(); //don't necessarily need dt bc it's in our player movement
+    }
+    super.update(dt);
   }
 
   void addJoystick() {
@@ -46,5 +58,23 @@ class PixelAdventure extends FlameGame
         margin: const EdgeInsets.only(left: 32, bottom: 32));
 
     add(joystick);
+  }
+
+  void updateJoystick() {
+    switch (joystick.direction) {
+      case JoystickDirection.left:
+      case JoystickDirection.upLeft:
+      case JoystickDirection.downLeft:
+        player.playerDirection = PlayerDirection.left;
+        break;
+      case JoystickDirection.right:
+      case JoystickDirection.downRight:
+      case JoystickDirection.upRight:
+        player.playerDirection = PlayerDirection.right;
+        break;
+      default:
+        player.playerDirection = PlayerDirection.none;
+        break;
+    }
   }
 }
