@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/painting.dart';
-import 'package:pixel_adventure/actors/player.dart';
-import 'package:pixel_adventure/levels/level.dart';
+import 'package:pixel_adventure/components/player.dart';
+import 'package:pixel_adventure/components/level.dart';
 
 class PixelAdventure extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks {
@@ -22,7 +21,8 @@ class PixelAdventure extends FlameGame
   @override
   FutureOr<void> onLoad() async {
     // Load all images into cache
-    await images.loadAllImages(); //  loadAll is better if too many images
+    await images
+        .loadAllImages(); //  loadAll and passing a list is better if too many images
 
     final world = Level(levelName: 'level-01', player: player);
 
