@@ -12,7 +12,10 @@ bool checkCollision(player, block) {
 // playerX compensating for horizontal flip when moving left
   final fixedPlayerX = player.scale.x < 0 ? playerX - playerWidth : playerX;
 
-  return (playerY < blockY + blockHeight &&
+// fix playerY for platforms (only collide bottom of player with platform if falling)
+  final fixedPlayerY = block.isPlatform ? playerY + playerHeight : playerY;
+
+  return (fixedPlayerY < blockY + blockHeight &&
       playerY + playerHeight > blockY &&
       fixedPlayerX < blockX + blockWidth &&
       fixedPlayerX + playerWidth > blockX);
