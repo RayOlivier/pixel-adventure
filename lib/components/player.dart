@@ -42,11 +42,11 @@ class Player extends SpriteAnimationGroupComponent
   FutureOr<void> onLoad() {
     _loadAllAnimations();
 
-    debugMode = true;
-    // not using the hitbox below but it is a visual for debugging
-    add(RectangleHitbox(
-        position: Vector2(hitbox.offsetX, hitbox.offsetY),
-        size: Vector2(hitbox.width, hitbox.height)));
+    // debugMode = true;
+    // // not using the hitbox below but it is a visual for debugging
+    // add(RectangleHitbox(
+    //     position: Vector2(hitbox.offsetX, hitbox.offsetY),
+    //     size: Vector2(hitbox.width, hitbox.height)));
 
     return super.onLoad();
   }

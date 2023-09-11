@@ -8,6 +8,6 @@ class CollisionBlock extends PositionComponent {
             //super is passing values to extended class (PositionComponent in this case)
             position: position,
             size: size) {
-    debugMode = true;
+    // debugMode = true;
   }
 }

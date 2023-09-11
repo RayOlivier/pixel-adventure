@@ -65,6 +65,7 @@ flutter:
   - assets/tiles/
   - assets/images/HUD/
   - assets/images/Terrain/
+  - assets/images/Background/
   - assets/images/Main Characters/Mask Dude/
   - assets/images/Main Characters/Ninja Frog/
   - assets/images/Main Characters/Pink Man/

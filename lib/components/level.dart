@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:pixel_adventure/components/background_tile.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
 
 import 'player.dart';
@@ -21,6 +22,27 @@ class Level extends World {
 
     add(level);
 
+    _scrollingBackground();
+    _spawningObjects();
+    _addCollisions();
+
+    return super.onLoad();
+  }
+
+  void _scrollingBackground() {
+    final backgroundLayer = level.tileMap.getLayer('Background');
+    const tileSize = 64;
+
+    if (backgroundLayer != null) {
+      final backgroundColor =
+          backgroundLayer.properties.getValue('backgroundColor');
+      final backgroundTile = BackgroundTile(
+          color: backgroundColor ?? 'gray', position: Vector2(0, 0));
+      // add(backgroundTile);
+    }
+  }
+
+  void _spawningObjects() {
     final spawnPointLayer = level.tileMap.getLayer<ObjectGroup>('SpawnPoints');
 
     if (spawnPointLayer != null) {
@@ -34,7 +56,9 @@ class Level extends World {
         }
       }
     }
+  }
 
+  void _addCollisions() {
     final collisionsLayer = level.tileMap.getLayer<ObjectGroup>('Collisions');
 
     if (collisionsLayer != null) {
@@ -59,6 +83,5 @@ class Level extends World {
     }
 
     player.collisionBlocks = collisionBlocks;
-    return super.onLoad();
   }
 }
