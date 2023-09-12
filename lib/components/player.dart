@@ -25,7 +25,7 @@ class Player extends SpriteAnimationGroupComponent
   final double stepTime = 0.05;
 
   final double _gravity = 9.8;
-  final double _jumpForce = 460;
+  final double _jumpForce = 260;
   final double _terminalVelocity = 300;
 
   double horizontalMovement = 0;
@@ -37,6 +37,9 @@ class Player extends SpriteAnimationGroupComponent
   List<CollisionBlock> collisionBlocks = [];
   PlayerHitbox hitbox =
       PlayerHitbox(offsetX: 10, offsetY: 4, width: 14, height: 28);
+
+  double fixedDeltaTime = 1 / 60; // targeting 60fps
+  double accumulatedTime = 0;
 
   @override
   FutureOr<void> onLoad() {
@@ -72,11 +75,18 @@ class Player extends SpriteAnimationGroupComponent
   @override
   void update(double dt) {
     // dt is delta time, depends on framerate ?
-    _updatePlayerState();
-    _updatePlayerMovement(dt);
-    _checkHorizontalCollisions();
-    _applyGravity(dt);
-    _checkVerticalCollisions();
+
+    accumulatedTime += dt;
+    while (accumulatedTime >= fixedDeltaTime) {
+      _updatePlayerState();
+      _updatePlayerMovement(fixedDeltaTime);
+      _checkHorizontalCollisions();
+      _applyGravity(fixedDeltaTime);
+      _checkVerticalCollisions();
+
+      accumulatedTime -= fixedDeltaTime;
+    }
+
     super.update(dt);
   }
 

@@ -31,14 +31,13 @@ class Level extends World {
 
   void _scrollingBackground() {
     final backgroundLayer = level.tileMap.getLayer('Background');
-    const tileSize = 64;
 
     if (backgroundLayer != null) {
       final backgroundColor =
           backgroundLayer.properties.getValue('backgroundColor');
       final backgroundTile = BackgroundTile(
-          color: backgroundColor ?? 'gray', position: Vector2(0, 0));
-      // add(backgroundTile);
+          color: backgroundColor ?? 'Gray', position: Vector2(0, 0));
+      add(backgroundTile);
     }
   }
 

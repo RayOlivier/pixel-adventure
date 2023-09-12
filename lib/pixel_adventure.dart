@@ -4,11 +4,12 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/painting.dart';
+import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
 
 class PixelAdventure extends FlameGame
-    with HasKeyboardHandlerComponents, DragCallbacks {
+    with HasKeyboardHandlerComponents, DragCallbacks, TapCallbacks {
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
@@ -16,7 +17,7 @@ class PixelAdventure extends FlameGame
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
   // @TODO: turn off joystick for desktop or make it a setting
-  bool showJoystick = true;
+  bool showControls = true;
 
   @override
   FutureOr<void> onLoad() async {
@@ -32,8 +33,9 @@ class PixelAdventure extends FlameGame
 
     addAll([cam, world]);
 
-    if (showJoystick) {
+    if (showControls) {
       addJoystick();
+      add(JumpButton());
     }
 
     return super.onLoad();
@@ -41,7 +43,7 @@ class PixelAdventure extends FlameGame
 
   @override
   void update(double dt) {
-    if (showJoystick) {
+    if (showControls) {
       updateJoystick(); //don't necessarily need dt bc it's in our player movement
     }
     super.update(dt);
@@ -63,21 +65,15 @@ class PixelAdventure extends FlameGame
   void updateJoystick() {
     switch (joystick.direction) {
       case JoystickDirection.left:
-      // case JoystickDirection.upLeft:
+      case JoystickDirection.upLeft:
       case JoystickDirection.downLeft:
 // @TODO: update with new logic, temporary fix
         player.horizontalMovement = -1;
         break;
       case JoystickDirection.right:
       case JoystickDirection.downRight:
-        // case JoystickDirection.upRight:
-        player.horizontalMovement = 1;
-        break;
-      case JoystickDirection.up:
-      case JoystickDirection.upLeft:
       case JoystickDirection.upRight:
-        player.hasJumped = true;
-        player.isOnGround = false;
+        player.horizontalMovement = 1;
         break;
       default:
         player.horizontalMovement = 0;

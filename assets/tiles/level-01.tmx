@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="PixelAdventure.tsx"/>
  <layer id="1" name="Background" width="40" height="23">
   <properties>
-   <property name="backgroundColor" value="gray"/>
+   <property name="backgroundColor" value="Gray"/>
   </properties>
   <data encoding="csv">
 112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,112,
