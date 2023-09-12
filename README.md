@@ -1,4 +1,4 @@
-# pixel_adventure
+# Pixel Adventure
 
 A basic platformer game demo
 
@@ -6,7 +6,7 @@ A basic platformer game demo
 ```bash
 flutter pub global run peanut \
 --web-renderer canvaskit \
---extra-args "--base-href=/pixel_adventure/" \
+--extra-args "--base-href=/pixel-adventure/" \
 && git push origin --set-upstream gh-pages
 ```
 
