@@ -6,10 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
 import 'package:pixel_adventure/components/custom_hitbox.dart';
 import 'package:pixel_adventure/components/fruit.dart';
+import 'package:pixel_adventure/components/saw.dart';
 import 'package:pixel_adventure/components/utils.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
-enum PlayerState { idle, running, jumping, falling }
+enum PlayerState { idle, running, jumping, falling, hit, appearing }
 
 // enum PlayerDirection { left, right, none }
 
@@ -23,6 +24,8 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation runningAnimation;
   late final SpriteAnimation jumpingAnimation;
   late final SpriteAnimation fallingAnimation;
+  late final SpriteAnimation hitAnimation;
+  late final SpriteAnimation appearingAnimation;
   final double stepTime = 0.05;
 
   final double _gravity = 9.8;
@@ -32,9 +35,11 @@ class Player extends SpriteAnimationGroupComponent
   double horizontalMovement = 0;
   double moveSpeed = 100;
   Vector2 velocity = Vector2.zero();
-
+  Vector2 startingPosition = Vector2.zero();
   bool isOnGround = false;
   bool hasJumped = false;
+  bool gotHit = false;
+
   List<CollisionBlock> collisionBlocks = [];
   CustomHitbox hitbox =
       CustomHitbox(offsetX: 10, offsetY: 4, width: 14, height: 28);
@@ -47,6 +52,9 @@ class Player extends SpriteAnimationGroupComponent
     _loadAllAnimations();
 
     // debugMode = true;
+
+    startingPosition = Vector2(position.x, position.y);
+
     add(RectangleHitbox(
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
         size: Vector2(hitbox.width, hitbox.height)));
@@ -78,6 +86,7 @@ class Player extends SpriteAnimationGroupComponent
       // print('colliding');
       other.collidedWithPlayer();
     }
+    if (other is Saw) _respawn();
 
     super.onCollision(intersectionPoints, other);
   }
@@ -88,11 +97,13 @@ class Player extends SpriteAnimationGroupComponent
 
     accumulatedTime += dt;
     while (accumulatedTime >= fixedDeltaTime) {
-      _updatePlayerState();
-      _updatePlayerMovement(fixedDeltaTime);
-      _checkHorizontalCollisions();
-      _applyGravity(fixedDeltaTime);
-      _checkVerticalCollisions();
+      if (!gotHit) {
+        _updatePlayerState();
+        _updatePlayerMovement(fixedDeltaTime);
+        _checkHorizontalCollisions();
+        _applyGravity(fixedDeltaTime);
+        _checkVerticalCollisions();
+      }
 
       accumulatedTime -= fixedDeltaTime;
     }
@@ -105,6 +116,8 @@ class Player extends SpriteAnimationGroupComponent
     runningAnimation = _spriteAnimation('Run', 12);
     jumpingAnimation = _spriteAnimation('Jump', 1);
     fallingAnimation = _spriteAnimation('Fall', 1);
+    hitAnimation = _spriteAnimation('Hit', 7);
+    appearingAnimation = _specialSpriteAnimation('Appearing', 7);
 
     // list of all animations
     animations = {
@@ -112,6 +125,8 @@ class Player extends SpriteAnimationGroupComponent
       PlayerState.running: runningAnimation,
       PlayerState.jumping: jumpingAnimation,
       PlayerState.falling: fallingAnimation,
+      PlayerState.hit: hitAnimation,
+      PlayerState.appearing: appearingAnimation,
     };
 
     //set current animation
@@ -126,6 +141,16 @@ class Player extends SpriteAnimationGroupComponent
             amount: frameCount,
             stepTime: stepTime,
             textureSize: Vector2.all(32)));
+  }
+
+  SpriteAnimation _specialSpriteAnimation(
+      String characterState, int frameCount) {
+    return SpriteAnimation.fromFrameData(
+        game.images.fromCache('Main Characters/$characterState (96x96).png'),
+        SpriteAnimationData.sequenced(
+            amount: frameCount,
+            stepTime: stepTime,
+            textureSize: Vector2.all(96)));
   }
 
   void _updatePlayerState() {
@@ -216,5 +241,27 @@ class Player extends SpriteAnimationGroupComponent
     position.y += velocity.y * dt;
     isOnGround = false;
     hasJumped = false;
+  }
+
+  void _respawn() {
+    const hitDuration = Duration(milliseconds: 400);
+    const appearingDuration = Duration(milliseconds: 350);
+    const cantMoveDuration = Duration(milliseconds: 400);
+    gotHit = true;
+    current = PlayerState.hit;
+    Future.delayed(hitDuration, () {
+      scale.x = 1; // undo flip if facing left
+      position = startingPosition -
+          Vector2.all(
+              32); // offset starting position by difference in character size and appearing animation size
+
+      current = PlayerState.appearing;
+      Future.delayed(appearingDuration, () {
+        velocity = Vector2.zero();
+        position = startingPosition;
+        _updatePlayerState();
+        Future.delayed(cantMoveDuration, () => gotHit = false);
+      });
+    });
   }
 }

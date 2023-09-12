@@ -1,3 +1,4 @@
 {
-    "map.lastUsedFormat": "tmx"
+    "map.lastUsedFormat": "tmx",
+    "property.type": "float"
 }
