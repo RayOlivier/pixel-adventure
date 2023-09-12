@@ -9,7 +9,11 @@ import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
 
 class PixelAdventure extends FlameGame
-    with HasKeyboardHandlerComponents, DragCallbacks, TapCallbacks {
+    with
+        HasKeyboardHandlerComponents,
+        DragCallbacks,
+        TapCallbacks,
+        HasCollisionDetection {
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 

@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
 import 'package:pixel_adventure/components/custom_hitbox.dart';
+import 'package:pixel_adventure/components/fruit.dart';
 import 'package:pixel_adventure/components/utils.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
@@ -12,7 +14,7 @@ enum PlayerState { idle, running, jumping, falling }
 // enum PlayerDirection { left, right, none }
 
 class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<PixelAdventure>, KeyboardHandler {
+    with HasGameRef<PixelAdventure>, KeyboardHandler, CollisionCallbacks {
   String character;
   // constructor
   Player({position, this.character = 'Ninja Frog'}) : super(position: position);
@@ -45,10 +47,9 @@ class Player extends SpriteAnimationGroupComponent
     _loadAllAnimations();
 
     // debugMode = true;
-    // // not using the hitbox below but it is a visual for debugging
-    // add(RectangleHitbox(
-    //     position: Vector2(hitbox.offsetX, hitbox.offsetY),
-    //     size: Vector2(hitbox.width, hitbox.height)));
+    add(RectangleHitbox(
+        position: Vector2(hitbox.offsetX, hitbox.offsetY),
+        size: Vector2(hitbox.width, hitbox.height)));
 
     return super.onLoad();
   }
@@ -69,6 +70,16 @@ class Player extends SpriteAnimationGroupComponent
     hasJumped = keysPressed.contains(LogicalKeyboardKey.space);
 
     return super.onKeyEvent(event, keysPressed);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is Fruit) {
+      // print('colliding');
+      other.collidedWithPlayer();
+    }
+
+    super.onCollision(intersectionPoints, other);
   }
 
   @override
