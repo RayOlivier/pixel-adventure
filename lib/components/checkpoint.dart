@@ -37,10 +37,10 @@ class Checkpoint extends SpriteAnimationComponent
             'Items/Checkpoints/Checkpoint/Checkpoint (Flag Out) (64x64).png'),
         SpriteAnimationData.sequenced(
             amount: 26,
-            stepTime: 0.05,
+            stepTime: 0.025,
             textureSize: Vector2.all(64),
             loop: false));
-    const flagOutDuration = Duration(milliseconds: 1300);
+    const flagOutDuration = Duration(milliseconds: 650);
 
     Future.delayed(flagOutDuration, () {
       animation = SpriteAnimation.fromFrameData(

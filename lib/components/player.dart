@@ -91,15 +91,17 @@ class Player extends SpriteAnimationGroupComponent
     return super.onKeyEvent(event, keysPressed);
   }
 
+// onCollisionStart only triggers once
   @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
     if (!reachedCheckpoint) {
       if (other is Fruit) other.collidedWithPlayer();
       if (other is Saw) _respawn();
       if (other is Checkpoint) _reachedCheckpoint();
     }
 
-    super.onCollision(intersectionPoints, other);
+    super.onCollisionStart(intersectionPoints, other);
   }
 
   @override
@@ -263,7 +265,6 @@ class Player extends SpriteAnimationGroupComponent
     gotHit = true;
     current = PlayerState.hit;
     Future.delayed(hitDuration, () {
-      scale.x = 1; // undo flip if facing left
       position = startingPosition -
           Vector2.all(
               32); // offset starting position by difference in character size and appearing animation size
@@ -292,9 +293,10 @@ class Player extends SpriteAnimationGroupComponent
       reachedCheckpoint = false;
       position = Vector2.all(-640); // move player off screen
 
-      const waitToChangeDuration = Duration(seconds: 3);
+      const waitToChangeDuration = Duration(seconds: 2);
       Future.delayed(waitToChangeDuration, () {
         // switch level
+        game.loadNextLevel();
       });
     });
   }

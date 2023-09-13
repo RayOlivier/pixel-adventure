@@ -17,11 +17,14 @@ class PixelAdventure extends FlameGame
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
-  late final CameraComponent cam;
+  late CameraComponent cam;
+  late Level world;
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
   // @TODO: turn off joystick for desktop or make it a setting
-  bool showControls = true;
+  bool showControls = false;
+  List<String> levelNames = ['level-01', 'level-01'];
+  int currentLevelIndex = 0;
 
   @override
   FutureOr<void> onLoad() async {
@@ -29,13 +32,7 @@ class PixelAdventure extends FlameGame
     await images
         .loadAllImages(); //  loadAll and passing a list is better if too many images
 
-    final world = Level(levelName: 'level-01', player: player);
-
-    cam = CameraComponent.withFixedResolution(
-        world: world, width: 640, height: 360);
-    cam.viewfinder.anchor = Anchor.topLeft;
-
-    addAll([cam, world]);
+    _loadLevel();
 
     if (showControls) {
       addJoystick();
@@ -83,5 +80,28 @@ class PixelAdventure extends FlameGame
         player.horizontalMovement = 0;
         break;
     }
+  }
+
+  void loadNextLevel() {
+    removeWhere((component) => component is Level);
+    if (currentLevelIndex < levelNames.length - 1) {
+      currentLevelIndex++;
+      _loadLevel();
+    } else {
+      // no more levels. go to menu?
+    }
+  }
+
+  void _loadLevel() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      // allow time to destroy and recreate level
+      world = Level(levelName: levelNames[currentLevelIndex], player: player);
+
+      cam = CameraComponent.withFixedResolution(
+          world: world, width: 640, height: 360);
+      cam.viewfinder.anchor = Anchor.topLeft;
+
+      addAll([cam, world]);
+    });
   }
 }

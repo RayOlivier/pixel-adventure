@@ -52,6 +52,7 @@ class Level extends World {
         switch (spawnPoint.class_) {
           case 'Player':
             player.position = Vector2(spawnPoint.x, spawnPoint.y);
+            player.scale.x = 1; // always spawns facing right
             add(player);
             break;
           case 'Fruit':
