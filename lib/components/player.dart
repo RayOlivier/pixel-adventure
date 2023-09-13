@@ -129,7 +129,7 @@ class Player extends SpriteAnimationGroupComponent
     runningAnimation = _spriteAnimation('Run', 12);
     jumpingAnimation = _spriteAnimation('Jump', 1);
     fallingAnimation = _spriteAnimation('Fall', 1);
-    hitAnimation = _spriteAnimation('Hit', 7);
+    hitAnimation = _spriteAnimation('Hit', 7)..loop = false; // cascade operator
     appearingAnimation = _specialSpriteAnimation('Appearing', 7);
     disappearingAnimation = _specialSpriteAnimation('Disappearing', 7);
 
@@ -165,7 +165,8 @@ class Player extends SpriteAnimationGroupComponent
         SpriteAnimationData.sequenced(
             amount: frameCount,
             stepTime: stepTime,
-            textureSize: Vector2.all(96)));
+            textureSize: Vector2.all(96),
+            loop: false));
   }
 
   void _updatePlayerState() {
@@ -258,25 +259,26 @@ class Player extends SpriteAnimationGroupComponent
     hasJumped = false;
   }
 
-  void _respawn() {
-    const hitDuration = Duration(milliseconds: 400);
-    const appearingDuration = Duration(milliseconds: 350);
+  void _respawn() async {
     const cantMoveDuration = Duration(milliseconds: 400);
     gotHit = true;
     current = PlayerState.hit;
-    Future.delayed(hitDuration, () {
-      position = startingPosition -
-          Vector2.all(
-              32); // offset starting position by difference in character size and appearing animation size
 
-      current = PlayerState.appearing;
-      Future.delayed(appearingDuration, () {
-        velocity = Vector2.zero();
-        position = startingPosition;
-        _updatePlayerState();
-        Future.delayed(cantMoveDuration, () => gotHit = false);
-      });
-    });
+    await animationTicker?.completed;
+    animationTicker?.reset();
+
+    position = startingPosition -
+        Vector2.all(
+            32); // offset starting position by difference in character size and appearing animation size
+
+    current = PlayerState.appearing;
+    await animationTicker?.completed;
+    animationTicker?.reset();
+
+    velocity = Vector2.zero();
+    position = startingPosition;
+    _updatePlayerState();
+    Future.delayed(cantMoveDuration, () => gotHit = false);
   }
 
   void _reachedCheckpoint() {
