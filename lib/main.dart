@@ -2,6 +2,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pixel_adventure/overlays/main_menu.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 void main() async {
@@ -12,7 +13,11 @@ void main() async {
 
   PixelAdventure game = PixelAdventure();
   runApp(GameWidget(
-      game: kDebugMode
-          ? PixelAdventure()
-          : game)); // debug mode refreshes/starts game on changes
+    game: kDebugMode ? PixelAdventure() : game,
+    overlayBuilderMap: <String, Widget Function(BuildContext, PixelAdventure)>{
+      // 'gameOverlay': (context, game) => GameOverlay(game),
+      'mainMenuOverlay': (context, game) => MainMenuOverlay(game: game),
+      // 'gameOverOverlay': (context, game) => GameOverOverlay(game),
+    },
+  )); // debug mode refreshes/starts game on changes
 }

@@ -1,4 +1,37 @@
 {
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "level-01.tmx": {
+            "expandedObjectLayers": [
+                2,
+                3
+            ],
+            "scale": 1.7937,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 284.0497296091877,
+                "y": 209.62256787645646
+            }
+        },
+        "level-01.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
     "map.lastUsedFormat": "tmx",
-    "property.type": "float"
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+    ],
+    "project": "PixelAdventure.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "level-01.tsx"
+    ]
 }

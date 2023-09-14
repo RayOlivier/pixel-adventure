@@ -8,6 +8,8 @@ import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
 
+enum GameState { isPaused, isPlaying, isGameOver, isMainMenu }
+
 class PixelAdventure extends FlameGame
     with
         HasKeyboardHandlerComponents,
@@ -31,6 +33,8 @@ class PixelAdventure extends FlameGame
 
   @override
   FutureOr<void> onLoad() async {
+    overlays.add('mainMenuOverlay');
+
     // Load all images into cache
     await images
         .loadAllImages(); //  loadAll and passing a list is better if too many images
@@ -111,7 +115,21 @@ class PixelAdventure extends FlameGame
     });
   }
 
+  void openSettings() {
+    overlays.add('settingsOverlay');
+  }
+
+  void startGame() {
+    // TODO implement game start
+    _initializeGameStart();
+  }
+
   void reset() {
     // TODO implement game reset
+  }
+
+  void _initializeGameStart() {
+    // game.state = GameState.playing;
+    overlays.remove('mainMenuOverlay');
   }
 }
