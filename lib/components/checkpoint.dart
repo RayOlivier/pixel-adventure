@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 class Checkpoint extends SpriteAnimationComponent
@@ -31,7 +30,6 @@ class Checkpoint extends SpriteAnimationComponent
   }
 
   void _reachedCheckpoint() async {
-    // reachedCheckpoint = true;
     animation = SpriteAnimation.fromFrameData(
         game.images.fromCache(
             'Items/Checkpoints/Checkpoint/Checkpoint (Flag Out) (64x64).png'),

@@ -23,6 +23,9 @@ class PixelAdventure extends FlameGame
   late JoystickComponent joystick;
   // @TODO: turn off joystick for desktop or make it a setting
   bool showControls = false;
+  bool playSounds = true;
+  double soundVolume = 1.0;
+
   List<String> levelNames = ['level-01', 'level-01'];
   int currentLevelIndex = 0;
 
@@ -88,7 +91,9 @@ class PixelAdventure extends FlameGame
       currentLevelIndex++;
       _loadLevel();
     } else {
-      // no more levels. go to menu?
+      // no more levels. go to menu? temporarily reset to first level
+      currentLevelIndex = 0;
+      _loadLevel();
     }
   }
 
