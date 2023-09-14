@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/checkpoint.dart';
+import 'package:pixel_adventure/components/chicken.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
 import 'package:pixel_adventure/components/custom_hitbox.dart';
 import 'package:pixel_adventure/components/fruit.dart';
@@ -100,6 +101,7 @@ class Player extends SpriteAnimationGroupComponent
       if (other is Fruit) other.collidedWithPlayer();
       if (other is Saw) _respawn();
       if (other is Checkpoint) _reachedCheckpoint();
+      if (other is Chicken) other.collidedWithPlayer();
     }
 
     super.onCollisionStart(intersectionPoints, other);
@@ -179,7 +181,7 @@ class Player extends SpriteAnimationGroupComponent
       flipHorizontallyAroundCenter();
     }
 
-// if moving, set running
+    // if moving, set running
     if (velocity.x > 0 || velocity.x < 0) playerState = PlayerState.running;
 
     if (velocity.y > _gravity) playerState = PlayerState.falling;
@@ -191,7 +193,7 @@ class Player extends SpriteAnimationGroupComponent
   void _updatePlayerMovement(double dt) {
     if (hasJumped && isOnGround) _playerJump(dt);
 
-// prevents jumping after falling (ie walking off ledge)
+    // prevents jumping after falling (ie walking off ledge)
     if (velocity.y > _gravity) isOnGround = false;
 
     velocity.x = horizontalMovement * moveSpeed;
@@ -306,5 +308,9 @@ class Player extends SpriteAnimationGroupComponent
     const waitToChangeDuration = Duration(seconds: 2);
     // todo game menus and level transitions
     Future.delayed(waitToChangeDuration, () => game.loadNextLevel());
+  }
+
+  void collidedWithEnemy() {
+    _respawn();
   }
 }
