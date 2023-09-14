@@ -22,7 +22,7 @@ class PixelAdventure extends FlameGame
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
   // @TODO: turn off joystick for desktop or make it a setting
-  bool showControls = false;
+  bool showControls = true;
   bool playSounds = true;
   double soundVolume = 1.0;
 
@@ -55,6 +55,7 @@ class PixelAdventure extends FlameGame
 
   void addJoystick() {
     joystick = JoystickComponent(
+        priority: 10,
         knob: SpriteComponent(
             sprite: Sprite(
           images.fromCache('HUD/Knob.png'),
@@ -108,5 +109,9 @@ class PixelAdventure extends FlameGame
 
       addAll([cam, world]);
     });
+  }
+
+  void reset() {
+    // TODO implement game reset
   }
 }
