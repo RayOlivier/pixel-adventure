@@ -256,7 +256,9 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _playerJump(double dt) {
-    if (game.playSounds) FlameAudio.play('jump.wav', volume: game.soundVolume);
+    if (game.playSounds.value) {
+      FlameAudio.play('jump.wav', volume: game.soundVolume);
+    }
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
     isOnGround = false;
@@ -264,7 +266,9 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _respawn() async {
-    if (game.playSounds) FlameAudio.play('hit.wav', volume: game.soundVolume);
+    if (game.playSounds.value) {
+      FlameAudio.play('hit.wav', volume: game.soundVolume);
+    }
     const cantMoveDuration = Duration(milliseconds: 400);
     gotHit = true;
     current = PlayerState.hit;
@@ -287,7 +291,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _reachedCheckpoint() async {
-    if (game.playSounds) {
+    if (game.playSounds.value) {
       FlameAudio.play('disappear.wav', volume: game.soundVolume);
     }
     reachedCheckpoint = true;

@@ -119,7 +119,7 @@ class Chicken extends SpriteAnimationGroupComponent
 
   void collidedWithPlayer() async {
     if (player.velocity.y > 0 && player.y + player.height > position.y) {
-      if (game.playSounds) {
+      if (game.playSounds.value) {
         FlameAudio.play('jumpOffEnemy.wav', volume: game.soundVolume);
       }
 
