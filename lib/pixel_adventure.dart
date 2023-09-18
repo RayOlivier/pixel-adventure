@@ -26,10 +26,9 @@ class PixelAdventure extends FlameGame
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
 
-  bool showControls = true;
-  bool playMusic = false;
-
   ValueNotifier<bool> playSounds = ValueNotifier(true);
+  ValueNotifier<bool> playMusic = ValueNotifier(true);
+  ValueNotifier<bool> useMobileControls = ValueNotifier(true);
   double soundVolume = 0.5;
   double musicVolume = 0.1;
 
@@ -39,22 +38,30 @@ class PixelAdventure extends FlameGame
   @override
   FutureOr<void> onLoad() async {
     overlays.add('mainMenuOverlay');
+    FlameAudio.bgm.initialize();
 
     // Load all images into cache
     await images
         .loadAllImages(); //  loadAll and passing a list is better if too many images
+
+    // FlameAudio.bgm.
 
     await FlameAudio.audioCache.loadAll([
       'collectFruit.wav',
       'disappear.wav',
       'hit.wav',
       'jump.wav',
-      'jumpOffEnemy.wav'
+      'jumpOffEnemy.wav',
+      'music/menu.mp3',
+      'music/forest.mp3'
     ]);
+
+// player must interact with document
+    // FlameAudio.bgm.play('music/menu.mp3', volume: musicVolume);
 
     _loadLevel();
 
-    if (showControls) {
+    if (useMobileControls.value) {
       addJoystick();
       add(JumpButton());
     }
@@ -64,8 +71,7 @@ class PixelAdventure extends FlameGame
 
   @override
   void onGameResize(Vector2 size) {
-    // @TODO: turn off joystick for desktop or make it a setting
-    if (isLoaded) {
+    if (isLoaded && useMobileControls.value) {
       removeWhere((component) => component is JoystickComponent);
       removeWhere((component) => component is JumpButton);
       addJoystick();
@@ -77,13 +83,13 @@ class PixelAdventure extends FlameGame
 
   @override
   void update(double dt) {
-    if (showControls) {
+    if (useMobileControls.value) {
       updateJoystick(); //don't necessarily need dt bc it's in our player movement
     }
     super.update(dt);
   }
 
-  void toggleAudio() async {
+  void toggleSfx() async {
     if (playSounds.value) {
       playSounds.value = false;
 
@@ -100,6 +106,31 @@ class PixelAdventure extends FlameGame
       ]);
 
       FlameAudio.play('collectFruit.wav');
+    }
+  }
+
+  void toggleMusic() async {
+    if (playMusic.value) {
+      playMusic.value = false;
+
+      FlameAudio.bgm.pause();
+    } else {
+      playMusic.value = true;
+      FlameAudio.bgm.resume();
+
+      FlameAudio.play('collectFruit.wav');
+    }
+  }
+
+  void toggleMobileControls() async {
+    if (useMobileControls.value) {
+      useMobileControls.value = false;
+      removeWhere((component) => component is JoystickComponent);
+      removeWhere((component) => component is JumpButton);
+    } else {
+      useMobileControls.value = true;
+      addJoystick();
+      add(JumpButton());
     }
   }
 
@@ -164,13 +195,19 @@ class PixelAdventure extends FlameGame
     overlays.add('settingsOverlay');
   }
 
+  void closeSettings() {
+    print('closing settings');
+    overlays.remove('settingsOverlay');
+  }
+
   void startGame() async {
     if (playSounds.value) {
-      FlameAudio.play('disappear.wav');
+      FlameAudio.play('disappear.wav', volume: soundVolume);
     }
-    if (playMusic) {
-      FlameAudio.bgm.initialize();
-      FlameAudio.bgm.play('music/menu.mp3');
+    if (playMusic.value) {
+      // FlameAudio.bgm.initialize();
+      FlameAudio.bgm.stop();
+      FlameAudio.bgm.play('music/forest.mp3', volume: musicVolume);
       // FlameAudio.bgm.load('music/menu.mp3');
       // .loop('music/menu.mp3', volume: musicVolume);
     }

@@ -41,30 +41,17 @@ class MainMenuOverlay extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: game.playSounds,
-                    builder: (context, soundsOn, child) => ElevatedButton.icon(
-                      // 'Sound FX',
-                      label: Text(soundsOn ? 'Mute' : 'UnMute'),
-                      icon:
-                          Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
-                      onPressed: () => game.toggleAudio(),
-                    ),
-                  ),
-                  // ElevatedButton(
-                  //     onPressed: () async {
-                  //       game.toggleAudio();
-                  //     },
-                  //     child: Text(game.playSounds ? 'Mute' : 'UnMute')),
+                  ElevatedButton(
+                      onPressed: () async {
+                        game.openSettings();
+                      },
+                      child: const Text('Settings')),
                   const SizedBox(
                     height: 10,
                   ),
-                  // ElevatedButton.icon(
-                  //     onPressed: () async {
-                  //       game.openSettings();
-                  //     },
-                  //     icon: const Icon(Icons.settings),
-                  //     label: const Text('settings')),
+                  const SizedBox(
+                    height: 10,
+                  ),
                 ],
               )
             ],
