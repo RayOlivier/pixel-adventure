@@ -276,6 +276,8 @@ class Player extends SpriteAnimationGroupComponent
     await animationTicker?.completed;
     animationTicker?.reset();
 
+    print('start $startingPosition');
+
     position = startingPosition -
         Vector2.all(
             32); // offset starting position by difference in character size and appearing animation size
@@ -316,5 +318,10 @@ class Player extends SpriteAnimationGroupComponent
 
   void collidedWithEnemy() {
     _respawn();
+  }
+
+  void spawn(Vector2 position, {scaleX = 1}) {
+    startingPosition = position;
+    this.position = position;
   }
 }
