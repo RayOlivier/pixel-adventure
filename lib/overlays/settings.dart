@@ -31,7 +31,7 @@ class SettingsOverlay extends StatelessWidget {
             Row(children: [
               const Text(
                 'SFX:',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               const SizedBox(width: 20),
               ValueListenableBuilder<bool>(
@@ -50,7 +50,7 @@ class SettingsOverlay extends StatelessWidget {
             Row(children: [
               const Text(
                 'Music:',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               const SizedBox(width: 20),
               ValueListenableBuilder<bool>(
@@ -69,7 +69,7 @@ class SettingsOverlay extends StatelessWidget {
             Row(children: [
               const Text(
                 'Controls:',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               const SizedBox(width: 20),
               ValueListenableBuilder<bool>(
@@ -83,6 +83,9 @@ class SettingsOverlay extends StatelessWidget {
                 ),
               ),
             ]),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton.icon(
               onPressed: () => game.closeSettings(),
               icon: const Icon(Icons.close),

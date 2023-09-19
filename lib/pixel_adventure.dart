@@ -125,7 +125,6 @@ class PixelAdventure extends FlameGame
     } else {
       useMobileControls.value = true;
       addMobileControls();
-      // add(JumpButton());
     }
   }
 
