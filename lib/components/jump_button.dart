@@ -13,12 +13,9 @@ class JumpButton extends SpriteComponent
 
   @override
   FutureOr<void> onLoad() {
-    priority = 10;
+    priority = 100;
     sprite = Sprite(game.images.fromCache('HUD/JumpButton.png'));
-    position = Vector2(
-      game.size.x - margin - buttonSize,
-      game.size.y - margin - buttonSize,
-    );
+    updatePosition();
 
     return super.onLoad();
   }
@@ -33,5 +30,21 @@ class JumpButton extends SpriteComponent
   void onTapUp(TapUpEvent event) {
     game.player.hasJumped = false;
     super.onTapUp(event);
+  }
+
+  void updatePosition({newGameSize}) {
+    if (newGameSize != null) {
+      position = Vector2(
+        newGameSize.x - margin - buttonSize,
+        newGameSize.y - margin - buttonSize,
+      );
+    } else {
+      position = Vector2(
+        game.size.x - margin - buttonSize,
+        game.size.y - margin - buttonSize,
+      );
+    }
+
+    print('position $position');
   }
 }

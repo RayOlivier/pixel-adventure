@@ -23,6 +23,7 @@ class PixelAdventure extends FlameGame
 
   late CameraComponent cam;
   late Level world;
+  JumpButton jumpButton = JumpButton();
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
 
@@ -44,8 +45,6 @@ class PixelAdventure extends FlameGame
     await images
         .loadAllImages(); //  loadAll and passing a list is better if too many images
 
-    // FlameAudio.bgm.
-
     await FlameAudio.audioCache.loadAll([
       'collectFruit.wav',
       'disappear.wav',
@@ -62,8 +61,7 @@ class PixelAdventure extends FlameGame
     _loadLevel();
 
     if (useMobileControls.value) {
-      addJoystick();
-      add(JumpButton());
+      addMobileControls();
     }
 
     return super.onLoad();
@@ -72,10 +70,7 @@ class PixelAdventure extends FlameGame
   @override
   void onGameResize(Vector2 size) {
     if (isLoaded && useMobileControls.value) {
-      removeWhere((component) => component is JoystickComponent);
-      removeWhere((component) => component is JumpButton);
-      addJoystick();
-      add(JumpButton());
+      jumpButton.updatePosition(newGameSize: size);
     }
 
     super.onGameResize(size);
@@ -129,9 +124,14 @@ class PixelAdventure extends FlameGame
       removeWhere((component) => component is JumpButton);
     } else {
       useMobileControls.value = true;
-      addJoystick();
-      add(JumpButton());
+      addMobileControls();
+      // add(JumpButton());
     }
+  }
+
+  void addMobileControls() {
+    addJoystick();
+    add(jumpButton);
   }
 
   void addJoystick() {
