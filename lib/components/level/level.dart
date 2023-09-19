@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:pixel_adventure/components/background_tile.dart';
-import 'package:pixel_adventure/components/checkpoint.dart';
-import 'package:pixel_adventure/components/chicken.dart';
-import 'package:pixel_adventure/components/collision_block.dart';
-import 'package:pixel_adventure/components/fruit.dart';
-import 'package:pixel_adventure/components/saw.dart';
+import 'package:pixel_adventure/components/level/background_tile.dart';
+import 'package:pixel_adventure/components/level/checkpoint.dart';
+import 'package:pixel_adventure/components/enemy/chicken.dart';
+import 'package:pixel_adventure/components/utility/collision_block.dart';
+import 'package:pixel_adventure/components/level/fruit.dart';
+import 'package:pixel_adventure/components/enemy/saw.dart';
 
-import 'player.dart';
+import '../player.dart';
 
 class Level extends World {
   final String levelName;

@@ -4,13 +4,13 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
-import 'package:pixel_adventure/components/checkpoint.dart';
-import 'package:pixel_adventure/components/chicken.dart';
-import 'package:pixel_adventure/components/collision_block.dart';
-import 'package:pixel_adventure/components/custom_hitbox.dart';
-import 'package:pixel_adventure/components/fruit.dart';
-import 'package:pixel_adventure/components/saw.dart';
-import 'package:pixel_adventure/components/utils.dart';
+import 'package:pixel_adventure/components/level/checkpoint.dart';
+import 'package:pixel_adventure/components/enemy/chicken.dart';
+import 'package:pixel_adventure/components/utility/collision_block.dart';
+import 'package:pixel_adventure/components/utility/custom_hitbox.dart';
+import 'package:pixel_adventure/components/level/fruit.dart';
+import 'package:pixel_adventure/components/enemy/saw.dart';
+import 'package:pixel_adventure/components/utility/utils.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 enum PlayerState {

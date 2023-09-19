@@ -8,7 +8,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
-import 'package:pixel_adventure/components/level.dart';
+import 'package:pixel_adventure/components/level/level.dart';
 
 enum GameState { isPaused, isPlaying, isGameOver, isMainMenu }
 
@@ -33,7 +33,8 @@ class PixelAdventure extends FlameGame
   double soundVolume = 0.5;
   double musicVolume = 0.1;
 
-  List<String> levelNames = ['level-01', 'level-01'];
+  // List<String> levelNames = ['level-01', 'level-02'];
+  List<String> levelNames = ['level-02', 'level-01'];
   int currentLevelIndex = 0;
 
   @override
