@@ -9,10 +9,11 @@ class SettingsOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/Background/leafBorderBg.png'),
-              fit: BoxFit.contain)),
+      decoration: const BoxDecoration(color: Color.fromRGBO(10, 20, 60, 1)
+          // image: DecorationImage(
+          //     image: AssetImage('assets/images/Background/leafBorderBg.png'),
+          //     fit: BoxFit.contain)
+          ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 48.0),
         child: Column(

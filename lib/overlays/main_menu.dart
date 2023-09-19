@@ -9,10 +9,11 @@ class MainMenuOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/Background/mainMenuBg.png'),
-              fit: BoxFit.fitWidth)),
+      decoration: const BoxDecoration(color: Color.fromRGBO(10, 20, 60, 0.8)
+          // image: DecorationImage(
+          //     image: AssetImage('assets/images/Background/mainMenuBg.png'),
+          //     fit: BoxFit.contain)
+          ),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
