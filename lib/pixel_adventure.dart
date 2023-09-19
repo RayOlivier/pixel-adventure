@@ -196,7 +196,6 @@ class PixelAdventure extends FlameGame
   }
 
   void closeSettings() {
-    print('closing settings');
     overlays.remove('settingsOverlay');
   }
 

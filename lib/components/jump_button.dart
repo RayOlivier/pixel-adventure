@@ -44,7 +44,5 @@ class JumpButton extends SpriteComponent
         game.size.y - margin - buttonSize,
       );
     }
-
-    print('position $position');
   }
 }
