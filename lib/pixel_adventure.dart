@@ -30,6 +30,7 @@ class PixelAdventure extends FlameGame
   ValueNotifier<bool> playSounds = ValueNotifier(true);
   ValueNotifier<bool> playMusic = ValueNotifier(true);
   ValueNotifier<bool> useMobileControls = ValueNotifier(true);
+
   double soundVolume = 0.5;
   double musicVolume = 0.1;
 
@@ -45,16 +46,6 @@ class PixelAdventure extends FlameGame
     // Load all images into cache
     await images
         .loadAllImages(); //  loadAll and passing a list is better if too many images
-
-    await FlameAudio.audioCache.loadAll([
-      'collectFruit.wav',
-      'disappear.wav',
-      'hit.wav',
-      'jump.wav',
-      'jumpOffEnemy.wav',
-      'music/menu.mp3',
-      'music/forest.mp3'
-    ]);
 
 // player must interact with document
     // FlameAudio.bgm.play('music/menu.mp3', volume: musicVolume);
@@ -93,13 +84,7 @@ class PixelAdventure extends FlameGame
     } else {
       playSounds.value = true;
 
-      await FlameAudio.audioCache.loadAll([
-        'collectFruit.wav',
-        'disappear.wav',
-        'hit.wav',
-        'jump.wav',
-        'jumpOffEnemy.wav'
-      ]);
+      await cacheLevelSounds();
 
       FlameAudio.play('collectFruit.wav');
     }
@@ -166,6 +151,16 @@ class PixelAdventure extends FlameGame
     }
   }
 
+  cacheLevelSounds() async {
+    await FlameAudio.audioCache.loadAll([
+      'collectFruit.wav',
+      'disappear.wav',
+      'hit.wav',
+      'jump.wav',
+      'jumpOffEnemy.wav'
+    ]);
+  }
+
   void loadNextLevel() {
     removeWhere((component) => component is Level);
     if (currentLevelIndex < levelNames.length - 1) {
@@ -217,8 +212,9 @@ class PixelAdventure extends FlameGame
     // TODO implement game reset
   }
 
-  void _initializeGameStart() {
+  void _initializeGameStart() async {
     // game.state = GameState.playing;
+    await cacheLevelSounds();
     overlays.remove('mainMenuOverlay');
   }
 }
