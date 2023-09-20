@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
+import 'package:pixel_adventure/components/enemy/rhino.dart';
 import 'package:pixel_adventure/components/level/checkpoint.dart';
 import 'package:pixel_adventure/components/enemy/chicken.dart';
 import 'package:pixel_adventure/components/utility/collision_block.dart';
@@ -11,6 +12,7 @@ import 'package:pixel_adventure/components/utility/custom_hitbox.dart';
 import 'package:pixel_adventure/components/level/fruit.dart';
 import 'package:pixel_adventure/components/enemy/saw.dart';
 import 'package:pixel_adventure/components/utility/utils.dart';
+import 'package:pixel_adventure/components/utility/variables.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 enum PlayerState {
@@ -40,12 +42,10 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation disappearingAnimation;
 
   final double stepTime = 0.05;
-  final double _gravity = 9.8;
   final double _jumpForce = 260;
   final double _terminalVelocity = 300;
 
   double horizontalMovement = 0;
-  double moveSpeed = 100;
   Vector2 velocity = Vector2.zero();
   Vector2 startingPosition = Vector2.zero();
   bool isOnGround = false;
@@ -102,6 +102,7 @@ class Player extends SpriteAnimationGroupComponent
       if (other is Saw) _respawn();
       if (other is Checkpoint) _reachedCheckpoint();
       if (other is Chicken) other.collidedWithPlayer();
+      if (other is Rhino) other.collidedWithPlayer();
     }
 
     super.onCollisionStart(intersectionPoints, other);
@@ -184,7 +185,7 @@ class Player extends SpriteAnimationGroupComponent
     // if moving, set running
     if (velocity.x > 0 || velocity.x < 0) playerState = PlayerState.running;
 
-    if (velocity.y > _gravity) playerState = PlayerState.falling;
+    if (velocity.y > gravity) playerState = PlayerState.falling;
     if (velocity.y < 0) playerState = PlayerState.jumping;
 
     current = playerState;
@@ -194,9 +195,9 @@ class Player extends SpriteAnimationGroupComponent
     if (hasJumped && isOnGround) _playerJump(dt);
 
     // prevents jumping after falling (ie walking off ledge)
-    if (velocity.y > _gravity) isOnGround = false;
+    if (velocity.y > gravity) isOnGround = false;
 
-    velocity.x = horizontalMovement * moveSpeed;
+    velocity.x = horizontalMovement * playerSpeed;
     position.x += velocity.x * dt;
   }
 
@@ -221,7 +222,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _applyGravity(double dt) {
-    velocity.y += _gravity;
+    velocity.y += gravity;
     velocity.y = velocity.y.clamp(-_jumpForce,
         _terminalVelocity); // clamp applies an upper and lower limit
     position.y += velocity.y * dt;
