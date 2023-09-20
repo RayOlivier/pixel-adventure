@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:pixel_adventure/components/enemy/rhino.dart';
 import 'package:pixel_adventure/components/level/background_tile.dart';
 import 'package:pixel_adventure/components/level/checkpoint.dart';
 import 'package:pixel_adventure/components/enemy/chicken.dart';
@@ -93,6 +94,15 @@ class Level extends World {
                 offNeg: offNeg,
                 offPos: offPos);
             add(chicken);
+          case 'Rhino':
+            final offNeg = spawnPoint.properties.getValue('offNeg');
+            final offPos = spawnPoint.properties.getValue('offPos');
+            final rhino = Rhino(
+                position: Vector2(spawnPoint.x, spawnPoint.y),
+                size: Vector2(spawnPoint.width, spawnPoint.height),
+                offNeg: offNeg,
+                offPos: offPos);
+            add(rhino);
             break;
           default:
         }

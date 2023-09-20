@@ -34,7 +34,7 @@
  <objectgroup id="4" name="SpawnPoints">
   <object id="59" type="checkpoint" x="64" y="48" width="64" height="64"/>
   <object id="60" name="Strawberry" type="Fruit" x="544" y="64" width="32" height="32"/>
-  <object id="61" name="Rhino" type="Enemy" x="416" y="288" width="48" height="32">
+  <object id="61" name="Rhino" type="Rhino" x="416" y="288" width="48" height="32">
    <properties>
     <property name="offNeg" type="float" value="18"/>
     <property name="offPos" type="float" value="0"/>
