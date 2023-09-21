@@ -133,12 +133,16 @@ class Rhino extends SpriteAnimationGroupComponent
   _hitWall() async {
     velocity.x = 0;
     current = RhinoState.hitWall;
+
     await animationTicker?.completed;
+    animationTicker
+        ?.reset(); // allows animation to play again when loop is false
 
     targetDirection =
         chargesLeft ? 1 : -1; // walks back to the right if charges left
     velocity.x = targetDirection * walkSpeed;
     hitWall = true;
+
     flipHorizontallyAroundCenter();
   }
 
@@ -154,20 +158,9 @@ class Rhino extends SpriteAnimationGroupComponent
   }
 
   void collidedWithPlayer() async {
-    if (player.velocity.y > 0 && player.y + player.height > position.y) {
-      // TODO allow player to kill rhino
-      // if (game.playSounds.value) {
-      //   FlameAudio.play('jumpOffEnemy.wav', volume: game.soundVolume);
-      // }
+    //   // TODO allow player to kill rhino
 
-      // gotStomped = true;
-      // current = RhinoState.hit;
-      // player.velocity.y = -_bounceHeight;
-      // await animationTicker?.completed;
-      // removeFromParent();
-    } else {
-      player.collidedWithEnemy();
-      velocity = Vector2.zero();
-    }
+    player.collidedWithEnemy();
+    velocity = Vector2.zero();
   }
 }
