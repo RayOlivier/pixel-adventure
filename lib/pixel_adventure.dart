@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/painting.dart';
@@ -66,6 +67,13 @@ class PixelAdventure extends FlameGame
     }
 
     super.onGameResize(size);
+  }
+
+  @override
+  void lifecycleStateChange(AppLifecycleState state) {
+    // TODO: implement lifecycleStateChange
+    print('The state is $state');
+    super.lifecycleStateChange(state);
   }
 
   @override
@@ -210,6 +218,11 @@ class PixelAdventure extends FlameGame
 
   void reset() {
     // TODO implement game reset
+  }
+
+  void quit() {
+    // TODO implement game quit
+    FlameAudio.bgm.dispose();
   }
 
   void _initializeGameStart() async {
