@@ -129,7 +129,6 @@ class Chicken extends SpriteAnimationGroupComponent
       await animationTicker?.completed;
       removeFromParent();
     } else {
-      // player.gotHit
       player.collidedWithEnemy();
       velocity = Vector2.zero();
     }
