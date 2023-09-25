@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
+// import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/enemy/rhino.dart';
 import 'package:pixel_adventure/components/level/checkpoint.dart';
@@ -256,9 +256,13 @@ class Player extends SpriteAnimationGroupComponent
     }
   }
 
-  void _playerJump(double dt) {
+  void _playerJump(double dt) async {
     if (game.playSounds.value) {
-      FlameAudio.play('jump.wav', volume: game.soundVolume);
+      // FlameAudio.play('jump.wav', volume: game.soundVolume);
+      // game.audioPlayer.play(AssetSource('audio/jump.wav'));
+      // await game.justAudioPlayer.setAsset('assets/audio/jump.wav');
+      // game.justAudioPlayer.play();
+      game.jumpPlayer.play();
     }
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
@@ -268,7 +272,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _respawn() async {
     if (game.playSounds.value) {
-      FlameAudio.play('hit.wav', volume: game.soundVolume);
+      // FlameAudio.play('hit.wav', volume: game.soundVolume);
     }
     const cantMoveDuration = Duration(milliseconds: 400);
     gotHit = true;
@@ -295,7 +299,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _reachedCheckpoint() async {
     if (game.playSounds.value) {
-      FlameAudio.play('disappear.wav', volume: game.soundVolume);
+      // FlameAudio.play('disappear.wav', volume: game.soundVolume);
     }
     reachedCheckpoint = true;
     if (scale.x > 0) {

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
+// import 'package:flame_audio/flame_audio.dart';
 import 'package:pixel_adventure/components/utility/custom_hitbox.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
@@ -40,7 +40,8 @@ class Fruit extends SpriteAnimationComponent
     if (!collected) {
       collected = true;
       if (game.playSounds.value) {
-        FlameAudio.play('collectFruit.wav', volume: game.soundVolume);
+        // FlameAudio.play('collectFruit.wav', volume: game.soundVolume);
+        game.collectPlayer.play();
       }
       animation = SpriteAnimation.fromFrameData(
           game.images.fromCache('Items/Fruits/Collected.png'),
