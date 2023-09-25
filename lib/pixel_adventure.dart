@@ -41,11 +41,12 @@ class PixelAdventure extends FlameGame
   int currentLevelIndex = 0;
 
   // final audioPlayer = AudioPlayer();
-  // late AudioPlayer justAudioPlayer = AudioPlayer();
+  late AudioPlayer justAudioPlayer = AudioPlayer();
+  late AudioPlayer justAudioPlayerFruit = AudioPlayer();
 
-  late AudioPlayer jumpPlayer = AudioPlayer();
-  late AudioPlayer disappearPlayer = AudioPlayer();
-  late AudioPlayer collectPlayer = AudioPlayer();
+  // late AudioPlayer jumpPlayer = AudioPlayer();
+  // late AudioPlayer disappearPlayer = AudioPlayer();
+  // late AudioPlayer collectPlayer = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
@@ -196,9 +197,9 @@ class PixelAdventure extends FlameGame
 
   cacheLevelSounds() async {
     print('caching sound here');
-    await jumpPlayer.setAsset('assets/audio/jump.wav');
-    await disappearPlayer.setAsset('assets/audio/disappear.wav');
-    await collectPlayer.setAsset('assets/audio/collectFruit.wav');
+    // await jumpPlayer.setAsset('assets/audio/jump.wav');
+    // await disappearPlayer.setAsset('assets/audio/disappear.wav');
+    // await collectPlayer.setAsset('assets/audio/collectFruit.wav');
     // await audioPlayer.audioCache.load('jump.wav');
     //  await game.justAudioPlayer.setAsset('assets/audio/jump.wav');
 
@@ -231,9 +232,9 @@ class PixelAdventure extends FlameGame
     await cacheLevelSounds();
     if (playSounds.value) {
       // FlameAudio.play('disappear.wav', volume: soundVolume);
-      // await justAudioPlayer.setAsset('assets/audio/disappear.wav');
-      // justAudioPlayer.play();
-      disappearPlayer.play();
+      await justAudioPlayer.setAsset('assets/audio/disappear.wav');
+      justAudioPlayer.play();
+      // disappearPlayer.play();
     }
     if (playMusic.value) {
       // FlameAudio.bgm.stop();

@@ -260,9 +260,9 @@ class Player extends SpriteAnimationGroupComponent
     if (game.playSounds.value) {
       // FlameAudio.play('jump.wav', volume: game.soundVolume);
       // game.audioPlayer.play(AssetSource('audio/jump.wav'));
-      // await game.justAudioPlayer.setAsset('assets/audio/jump.wav');
-      // game.justAudioPlayer.play();
-      game.jumpPlayer.play();
+      await game.justAudioPlayer.setAsset('assets/audio/jump.wav');
+      game.justAudioPlayer.play();
+      // game.jumpPlayer.play();
     }
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
