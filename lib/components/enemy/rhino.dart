@@ -43,7 +43,7 @@ class Rhino extends SpriteAnimationGroupComponent
   FutureOr<void> onLoad() {
     player = game.player;
 
-    debugMode = true;
+    // debugMode = true;
     _loadAllAnimations();
     _calculateRange();
     chargesLeft = offNeg > 0;
