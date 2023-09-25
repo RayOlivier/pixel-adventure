@@ -42,7 +42,8 @@ class Fruit extends SpriteAnimationComponent
       if (game.playSounds.value) {
         // FlameAudio.play('collectFruit.wav', volume: game.soundVolume);
         // game.collectPlayer.play();
-        await game.justAudioPlayerFruit.setAsset('assets/audio/collect.wav');
+        await game.justAudioPlayerFruit
+            .setAsset('assets/audio/collectFruit.wav');
         game.justAudioPlayer.play();
       }
       animation = SpriteAnimation.fromFrameData(
