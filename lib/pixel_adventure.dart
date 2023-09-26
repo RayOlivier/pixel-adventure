@@ -2,15 +2,12 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-// import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/painting.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level/level.dart';
-import 'package:just_audio/just_audio.dart';
 
 enum GameState { isPaused, isPlaying, isGameOver, isMainMenu }
 
@@ -24,7 +21,7 @@ class PixelAdventure extends FlameGame
   Color backgroundColor() => const Color(0xFF211F30);
 
   late CameraComponent cam;
-  late Level world;
+  late World world;
   JumpButton jumpButton = JumpButton();
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
@@ -39,14 +36,7 @@ class PixelAdventure extends FlameGame
   List<String> levelNames = ['level-01', 'level-02'];
 
   int currentLevelIndex = 0;
-
-  // final audioPlayer = AudioPlayer();
-  late AudioPlayer justAudioPlayer = AudioPlayer();
-  late AudioPlayer justAudioPlayerFruit = AudioPlayer();
-
-  // late AudioPlayer jumpPlayer = AudioPlayer();
-  // late AudioPlayer disappearPlayer = AudioPlayer();
-  // late AudioPlayer collectPlayer = AudioPlayer();
+  final audioPlayer = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
@@ -88,29 +78,26 @@ class PixelAdventure extends FlameGame
   }
 
   void toggleSfx() async {
+    print('toggling sfx');
     if (playSounds.value) {
       playSounds.value = false;
-
-      // FlameAudio.audioCache.clearAll();
     } else {
       playSounds.value = true;
-
-      await cacheLevelSounds();
-
-      // FlameAudio.play('collectFruit.wav');
+      await audioPlayer.setAsset('assets/audio/collectFruit.wav');
+      audioPlayer.play();
     }
   }
 
   void toggleMusic() async {
+    print('toggling music');
     if (playMusic.value) {
       playMusic.value = false;
-
-      // FlameAudio.bgm.pause();
+      audioPlayer.pause();
     } else {
       playMusic.value = true;
-      // FlameAudio.bgm.resume();
 
-      // FlameAudio.play('collectFruit.wav');
+      await audioPlayer.setAsset('assets/audio/collectFruit.wav');
+      audioPlayer.play();
     }
   }
 
@@ -195,50 +182,15 @@ class PixelAdventure extends FlameGame
     overlays.remove('settingsOverlay');
   }
 
-  cacheLevelSounds() async {
-    print('caching sound here');
-    // await jumpPlayer.setAsset('assets/audio/jump.wav');
-    // await disappearPlayer.setAsset('assets/audio/disappear.wav');
-    // await collectPlayer.setAsset('assets/audio/collectFruit.wav');
-    // await audioPlayer.audioCache.load('jump.wav');
-    //  await game.justAudioPlayer.setAsset('assets/audio/jump.wav');
-
-    // final jumpSource = await justAudioPlayer.setAsset('assets/audio/jump.wav');
-
-    // await audioPlayer.audioCache.loadAll([
-    //   'audio/jump.wav',
-    //   'audio/collectCoin.mp3',
-    //   'audio/collectFruit.wav',
-    //   'audio/disappear.wav',
-    //   'audio/hit.wav',
-    //   'audio/jumpOffEnemy.wav'
-    // ]);
-    // print('cache: ${audioPlayer.audioCache.loadedFiles}');
-    // await FlameAudio.audioCache.loadAll([
-    //   'jump.wav',
-    //   'collectCoin.mp3',
-    //   'collectFruit.wav',
-    //   'disappear.wav',
-    //   'hit.wav',
-    //   'jumpOffEnemy.wav'
-    // ]);
-
-    // await justAudioPlayer.audioC
-  }
-
   void startGame() async {
     print('Start game');
-    // FlameAudio.bgm.initialize();
-    await cacheLevelSounds();
     if (playSounds.value) {
-      // FlameAudio.play('disappear.wav', volume: soundVolume);
-      await justAudioPlayer.setAsset('assets/audio/disappear.wav');
-      justAudioPlayer.play();
-      // disappearPlayer.play();
+      await audioPlayer.setAsset('assets/audio/disappear.wav');
+      await audioPlayer.play();
     }
     if (playMusic.value) {
-      // FlameAudio.bgm.stop();
-      // FlameAudio.bgm.play('music/forest.mp3', volume: musicVolume);
+      await audioPlayer.setAsset('assets/audio/music/forest.mp3');
+      audioPlayer.play();
     }
     _loadLevel();
     overlays.remove('mainMenuOverlay');
@@ -251,7 +203,6 @@ class PixelAdventure extends FlameGame
 
   void quit() {
     // TODO implement game quit
-    // FlameAudio.bgm.dispose();
   }
 
   void togglePauseState() {

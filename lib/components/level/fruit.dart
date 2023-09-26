@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-// import 'package:flame_audio/flame_audio.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pixel_adventure/components/utility/custom_hitbox.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
@@ -16,10 +16,14 @@ class Fruit extends SpriteAnimationComponent
   final hitbox = CustomHitbox(offsetX: 10, offsetY: 10, width: 12, height: 12);
   bool collected = false;
 
+  final audioPlayer = AudioPlayer();
+
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
     // debugMode = true;
     priority = -1;
+
+    await audioPlayer.setAsset('assets/audio/collectFruit.wav');
 
     add(
       RectangleHitbox(
@@ -40,11 +44,8 @@ class Fruit extends SpriteAnimationComponent
     if (!collected) {
       collected = true;
       if (game.playSounds.value) {
-        // FlameAudio.play('collectFruit.wav', volume: game.soundVolume);
-        // game.collectPlayer.play();
-        await game.justAudioPlayerFruit
-            .setAsset('assets/audio/collectFruit.wav');
-        game.justAudioPlayer.play();
+        audioPlayer.play();
+        await audioPlayer.setAsset('assets/audio/collectFruit.wav');
       }
       animation = SpriteAnimation.fromFrameData(
           game.images.fromCache('Items/Fruits/Collected.png'),
