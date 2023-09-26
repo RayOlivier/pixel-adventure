@@ -122,8 +122,8 @@ class Chicken extends SpriteAnimationGroupComponent
   void collidedWithPlayer() async {
     if (player.velocity.y > 0 && player.y + player.height > position.y) {
       if (game.playSounds.value) {
-      await audioPlayer.setAsset('assets/audio/jumpOffEnemy.wav');
-      await audioPlayer.play();
+        await audioPlayer.setAsset('assets/audio/jumpOffEnemy.wav');
+        audioPlayer.play();
       }
 
       gotStomped = true;

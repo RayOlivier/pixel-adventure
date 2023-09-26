@@ -40,7 +40,6 @@ class PixelAdventure extends FlameGame
   int currentLevelIndex = 0;
   final audioPlayer = AudioPlayer();
 
-
   @override
   FutureOr<void> onLoad() async {
     overlays.add('mainMenuOverlay');
@@ -192,14 +191,12 @@ class PixelAdventure extends FlameGame
   void startGame() async {
     print('Start game');
     if (playSounds.value) {
-
       await audioPlayer.setAsset('assets/audio/disappear.wav');
-      await audioPlayer.play();
-
+      audioPlayer.play();
     }
     if (playMusic.value) {
       await audioPlayer.setAsset('assets/audio/music/forest.mp3');
-      await audioPlayer.play();
+      audioPlayer.play();
     }
     _loadLevel();
     overlays.remove('mainMenuOverlay');

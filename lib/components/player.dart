@@ -76,7 +76,7 @@ class Player extends SpriteAnimationGroupComponent
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
         size: Vector2(hitbox.width, hitbox.height)));
 
-    // Load sound effect here 
+    // Load sound effect here
     await audioPlayerJump.setAsset('assets/audio/jump.wav');
     await audioPlayerHit.setAsset('assets/audio/hit.wav');
     await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
@@ -267,7 +267,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _playerJump(double dt) async {
     if (game.playSounds.value) {
-      await audioPlayerJump.play();
+      audioPlayerJump.play();
       await audioPlayerJump.setAsset('assets/audio/jump.wav');
     }
     velocity.y = -_jumpForce;
@@ -278,7 +278,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _respawn() async {
     if (game.playSounds.value) {
-      await audioPlayerHit.play();
+      audioPlayerHit.play();
       await audioPlayerHit.setAsset('assets/audio/hit.wav');
     }
     const cantMoveDuration = Duration(milliseconds: 400);
@@ -287,8 +287,6 @@ class Player extends SpriteAnimationGroupComponent
 
     await animationTicker?.completed;
     animationTicker?.reset();
-
-    print('start $startingPosition');
 
     position = startingPosition -
         Vector2.all(
@@ -306,7 +304,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _reachedCheckpoint() async {
     if (game.playSounds.value) {
-      await audioPlayerDisappear.play();
+      audioPlayerDisappear.play();
       await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
     }
     reachedCheckpoint = true;

@@ -43,7 +43,7 @@ class Fruit extends SpriteAnimationComponent
       collected = true;
       if (game.playSounds.value) {
         await audioPlayer.setAsset('assets/audio/collectFruit.wav');
-        await audioPlayer.play();
+        audioPlayer.play();
       }
       animation = SpriteAnimation.fromFrameData(
           game.images.fromCache('Items/Fruits/Collected.png'),
