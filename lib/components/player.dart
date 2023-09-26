@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-// import 'package:flame_audio/flame_audio.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/enemy/rhino.dart';
 import 'package:pixel_adventure/components/level/checkpoint.dart';
@@ -60,8 +60,12 @@ class Player extends SpriteAnimationGroupComponent
   double fixedDeltaTime = 1 / 60; // targeting 60fps
   double accumulatedTime = 0;
 
+  final audioPlayerJump = AudioPlayer();
+  final audioPlayerHit = AudioPlayer();
+  final audioPlayerDisappear = AudioPlayer();
+
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
     _loadAllAnimations();
 
     // debugMode = true;
@@ -71,6 +75,11 @@ class Player extends SpriteAnimationGroupComponent
     add(RectangleHitbox(
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
         size: Vector2(hitbox.width, hitbox.height)));
+
+    // Load sound effect here 
+    await audioPlayerJump.setAsset('assets/audio/jump.wav');
+    await audioPlayerHit.setAsset('assets/audio/hit.wav');
+    await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
 
     return super.onLoad();
   }
@@ -258,11 +267,8 @@ class Player extends SpriteAnimationGroupComponent
 
   void _playerJump(double dt) async {
     if (game.playSounds.value) {
-      // FlameAudio.play('jump.wav', volume: game.soundVolume);
-      // game.audioPlayer.play(AssetSource('audio/jump.wav'));
-      await game.justAudioPlayer.setAsset('assets/audio/jump.wav');
-      game.justAudioPlayer.play();
-      // game.jumpPlayer.play();
+      await audioPlayerJump.play();
+      await audioPlayerJump.setAsset('assets/audio/jump.wav');
     }
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
@@ -272,7 +278,8 @@ class Player extends SpriteAnimationGroupComponent
 
   void _respawn() async {
     if (game.playSounds.value) {
-      // FlameAudio.play('hit.wav', volume: game.soundVolume);
+      await audioPlayerHit.play();
+      await audioPlayerHit.setAsset('assets/audio/hit.wav');
     }
     const cantMoveDuration = Duration(milliseconds: 400);
     gotHit = true;
@@ -299,7 +306,8 @@ class Player extends SpriteAnimationGroupComponent
 
   void _reachedCheckpoint() async {
     if (game.playSounds.value) {
-      // FlameAudio.play('disappear.wav', volume: game.soundVolume);
+      await audioPlayerDisappear.play();
+      await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
     }
     reachedCheckpoint = true;
     if (scale.x > 0) {

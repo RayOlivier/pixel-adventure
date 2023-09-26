@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
@@ -31,6 +31,8 @@ class Chicken extends SpriteAnimationGroupComponent
   late final SpriteAnimation _idleAnimation;
   late final SpriteAnimation _runAnimation;
   late final SpriteAnimation _hitAnimation;
+
+  final audioPlayer = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() {
@@ -120,7 +122,8 @@ class Chicken extends SpriteAnimationGroupComponent
   void collidedWithPlayer() async {
     if (player.velocity.y > 0 && player.y + player.height > position.y) {
       if (game.playSounds.value) {
-        FlameAudio.play('jumpOffEnemy.wav', volume: game.soundVolume);
+      await audioPlayer.setAsset('assets/audio/jumpOffEnemy.wav');
+      await audioPlayer.play();
       }
 
       gotStomped = true;
