@@ -264,10 +264,17 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _playerJump(double dt) async {
-    if (game.playSounds.value) {
-      audioPlayerJump.play();
-      await audioPlayerJump.setAsset('assets/audio/jump.wav');
-    }
+    print('player jump****');
+    // if (game.playSounds.value) {
+    //   print('jump source start: ${audioPlayerJump.audioSource.toString()}');
+    //   print('jump source start: ${audioPlayerJump.audioSource.hashCode}');
+    //   audioPlayerJump.play();
+    //   print(
+    //       'jump source after play: ${audioPlayerJump.audioSource.toString()}');
+    //   // await audioPlayerJump.setAsset('assets/audio/jump.wav');
+    //   await audioPlayerJump.load();
+    //   print('jump source after load:${audioPlayerJump.audioSource.toString()}');
+    // }
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
     isOnGround = false;
@@ -277,7 +284,8 @@ class Player extends SpriteAnimationGroupComponent
   void _respawn() async {
     if (game.playSounds.value) {
       audioPlayerHit.play();
-      await audioPlayerHit.setAsset('assets/audio/hit.wav');
+      // await audioPlayerHit.setAsset('assets/audio/hit.wav');
+      await audioPlayerHit.load();
     }
     const cantMoveDuration = Duration(milliseconds: 400);
     gotHit = true;
@@ -303,7 +311,8 @@ class Player extends SpriteAnimationGroupComponent
   void _reachedCheckpoint() async {
     if (game.playSounds.value) {
       audioPlayerDisappear.play();
-      await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
+      // await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
+      await audioPlayerDisappear.load();
     }
     reachedCheckpoint = true;
     if (scale.x > 0) {
