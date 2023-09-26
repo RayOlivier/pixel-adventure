@@ -19,9 +19,11 @@ class Fruit extends SpriteAnimationComponent
   final audioPlayer = AudioPlayer();
 
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
     // debugMode = true;
     priority = -1;
+
+    await audioPlayer.setAsset('assets/audio/collectFruit.wav');
 
     add(
       RectangleHitbox(
@@ -42,8 +44,8 @@ class Fruit extends SpriteAnimationComponent
     if (!collected) {
       collected = true;
       if (game.playSounds.value) {
-        await audioPlayer.setAsset('assets/audio/collectFruit.wav');
         audioPlayer.play();
+        await audioPlayer.setAsset('assets/audio/collectFruit.wav');
       }
       animation = SpriteAnimation.fromFrameData(
           game.images.fromCache('Items/Fruits/Collected.png'),
