@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
@@ -44,13 +42,9 @@ class PixelAdventure extends FlameGame
   FutureOr<void> onLoad() async {
     overlays.add('mainMenuOverlay');
 
-    // await cacheLevelSounds();
-
     // Load all images into cache
     await images
         .loadAllImages(); //  loadAll and passing a list is better if too many images
-
-    // _loadLevel();
 
     if (useMobileControls.value) {
       addMobileControls();
@@ -192,7 +186,7 @@ class PixelAdventure extends FlameGame
     print('Start game');
     if (playSounds.value) {
       await audioPlayer.setAsset('assets/audio/disappear.wav');
-      audioPlayer.play();
+      await audioPlayer.play();
     }
     if (playMusic.value) {
       await audioPlayer.setAsset('assets/audio/music/forest.mp3');

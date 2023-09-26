@@ -68,8 +68,6 @@ class Player extends SpriteAnimationGroupComponent
   FutureOr<void> onLoad() async {
     _loadAllAnimations();
 
-    // debugMode = true;
-
     startingPosition = Vector2(position.x, position.y);
 
     add(RectangleHitbox(
