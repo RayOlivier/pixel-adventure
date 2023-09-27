@@ -37,6 +37,7 @@ class PixelAdventure extends FlameGame
 
   int currentLevelIndex = 0;
   final audioPlayer = AudioPlayer();
+  final musicPlayer = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
@@ -92,12 +93,12 @@ class PixelAdventure extends FlameGame
     print('toggling music');
     if (playMusic.value) {
       playMusic.value = false;
-      audioPlayer.pause();
+      musicPlayer.pause();
     } else {
       playMusic.value = true;
 
-      await audioPlayer.setAsset('assets/audio/collectFruit.wav');
-      audioPlayer.play();
+      await musicPlayer.setAsset('assets/audio/collectFruit.wav');
+      musicPlayer.play();
     }
   }
 
@@ -189,8 +190,8 @@ class PixelAdventure extends FlameGame
       await audioPlayer.play();
     }
     if (playMusic.value) {
-      await audioPlayer.setAsset('assets/audio/music/forest.mp3');
-      audioPlayer.play();
+      await musicPlayer.setAsset('assets/audio/music/forest.mp3');
+      musicPlayer.play();
     }
     _loadLevel();
     overlays.remove('mainMenuOverlay');
@@ -201,7 +202,7 @@ class PixelAdventure extends FlameGame
   void onLoseFocus() {
     // TODO implement game minimize
     print('minimizing');
-    audioPlayer.pause();
+    musicPlayer.pause();
   }
 
   //restart music when game is opened again
@@ -224,6 +225,7 @@ class PixelAdventure extends FlameGame
   void onDispose() {
     print('onDispose');
     audioPlayer.dispose();
+    musicPlayer.dispose();
     super.onDispose();
   }
 
