@@ -197,12 +197,34 @@ class PixelAdventure extends FlameGame
     // overlays.add('gameplayOverlay');
   }
 
+  //stop music when game is put in background
+  void onLoseFocus() {
+    // TODO implement game minimize
+    print('minimizing');
+    audioPlayer.pause();
+  }
+
+  //restart music when game is opened again
+  void onResumeFocus() {
+    // TODO implement game minimize
+    print('resuming');
+    // add check for previous pause and/or audioplayer exists (resume is called on initial start)
+    // audioPlayer.play();
+  }
+
   void reset() {
     // TODO implement game reset
   }
 
   void quit() {
     // TODO implement game quit
+  }
+
+  @override
+  void onDispose() {
+    print('onDispose');
+    audioPlayer.dispose();
+    super.onDispose();
   }
 
   void togglePauseState() {
