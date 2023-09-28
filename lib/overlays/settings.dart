@@ -54,7 +54,7 @@ class SettingsOverlay extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               ValueListenableBuilder<bool>(
-                valueListenable: game.playMusic,
+                valueListenable: game.musicOn,
                 builder: (context, musicOn, child) => ElevatedButton.icon(
                   // 'Music',
                   label: Text(musicOn ? 'Mute' : 'Unmute'),

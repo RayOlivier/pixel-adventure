@@ -44,7 +44,8 @@ class Fruit extends SpriteAnimationComponent
     if (!collected) {
       collected = true;
       if (game.playSounds.value) {
-        audioPlayer.play();
+        // audioPlayer.play();
+        game.audioManager.fruitCollectPlayer.play();
       }
       animation = SpriteAnimation.fromFrameData(
           game.images.fromCache('Items/Fruits/Collected.png'),

@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:html' as html;
+// import 'dart:html';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level/level.dart';
+import 'package:pixel_adventure/components/utility/audio_manager.dart';
 
 enum GameState { isPaused, isPlaying, isGameOver, isMainMenu }
 
@@ -17,6 +20,7 @@ class PixelAdventure extends FlameGame
         DragCallbacks,
         TapCallbacks,
         HasCollisionDetection {
+  PixelAdventure();
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
@@ -27,20 +31,25 @@ class PixelAdventure extends FlameGame
   late JoystickComponent joystick;
 
   ValueNotifier<bool> playSounds = ValueNotifier(true);
-  ValueNotifier<bool> playMusic = ValueNotifier(true);
+  ValueNotifier<bool> musicOn = ValueNotifier(true);
   ValueNotifier<bool> useMobileControls = ValueNotifier(true);
-
-  double soundVolume = 0.5;
-  double musicVolume = 0.01;
 
   List<String> levelNames = ['level-01', 'level-02'];
 
   int currentLevelIndex = 0;
-  final audioPlayer = AudioPlayer();
-  final musicPlayer = AudioPlayer();
+
+  // can't play audio until user interacts
+  bool initialInteraction = false;
+  AudioManager audioManager = AudioManager();
 
   @override
   FutureOr<void> onLoad() async {
+    if (kIsWeb) {
+      html.window.addEventListener('focus', onFocus);
+      html.window.addEventListener('blur', onBlur);
+      html.window.addEventListener('visibilityChange', onVisibilityChange);
+    }
+
     overlays.add('mainMenuOverlay');
 
     // Load all images into cache
@@ -51,7 +60,23 @@ class PixelAdventure extends FlameGame
       addMobileControls();
     }
 
+    await add(audioManager);
+
     return super.onLoad();
+  }
+
+  void onFocus(html.Event e) {
+    if (initialInteraction && !audioManager.bgmPlayer.playing) {
+      audioManager.playMusic();
+    }
+  }
+
+  void onBlur(html.Event e) async {
+    audioManager.pauseMusic();
+  }
+
+  void onVisibilityChange(html.Event e) {
+    audioManager.pauseMusic();
   }
 
   @override
@@ -61,13 +86,6 @@ class PixelAdventure extends FlameGame
     }
 
     super.onGameResize(size);
-  }
-
-  @override
-  void lifecycleStateChange(AppLifecycleState state) {
-    // TODO: implement lifecycleStateChange
-    print('The state is $state'); // not working for web
-    super.lifecycleStateChange(state);
   }
 
   @override
@@ -84,21 +102,17 @@ class PixelAdventure extends FlameGame
       playSounds.value = false;
     } else {
       playSounds.value = true;
-      await audioPlayer.setAsset('assets/audio/collectFruit.wav');
-      audioPlayer.play();
+      audioManager.playOnce('collectFruit.wav');
     }
   }
 
   void toggleMusic() async {
-    print('toggling music');
-    if (playMusic.value) {
-      playMusic.value = false;
-      musicPlayer.pause();
+    if (musicOn.value) {
+      musicOn.value = false;
+      audioManager.pauseMusic();
     } else {
-      playMusic.value = true;
-
-      await musicPlayer.setAsset('assets/audio/collectFruit.wav');
-      musicPlayer.play();
+      musicOn.value = true;
+      audioManager.playMusic();
     }
   }
 
@@ -163,19 +177,17 @@ class PixelAdventure extends FlameGame
   }
 
   void _loadLevel() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      // allow time to destroy and recreate level
-      world = Level(levelName: levelNames[currentLevelIndex], player: player);
+    world = Level(levelName: levelNames[currentLevelIndex], player: player);
 
-      cam = CameraComponent.withFixedResolution(
-          world: world, width: 640, height: 360);
-      cam.viewfinder.anchor = Anchor.topLeft;
+    cam = CameraComponent.withFixedResolution(
+        world: world, width: 640, height: 360);
+    cam.viewfinder.anchor = Anchor.topLeft;
 
-      addAll([cam, world]);
-    });
+    addAll([cam, world]);
   }
 
   void openSettings() {
+    initialInteraction = true;
     overlays.add('settingsOverlay');
   }
 
@@ -184,33 +196,17 @@ class PixelAdventure extends FlameGame
   }
 
   void startGame() async {
-    print('Start game');
-    if (playSounds.value) {
-      await audioPlayer.setAsset('assets/audio/disappear.wav');
-      await audioPlayer.play();
-    }
-    if (playMusic.value) {
-      await musicPlayer.setAsset('assets/audio/music/forest.mp3');
-      musicPlayer.play();
-    }
+    initialInteraction = true;
+
     _loadLevel();
+    if (playSounds.value) {
+      audioManager.playOnce('disappear.wav');
+    }
+    if (musicOn.value) {
+      audioManager.playMusic();
+    }
     overlays.remove('mainMenuOverlay');
     // overlays.add('gameplayOverlay');
-  }
-
-  //stop music when game is put in background
-  void onLoseFocus() {
-    // TODO implement game minimize
-    print('minimizing');
-    musicPlayer.pause();
-  }
-
-  //restart music when game is opened again
-  void onResumeFocus() {
-    // TODO implement game minimize
-    print('resuming');
-    // add check for previous pause and/or audioplayer exists (resume is called on initial start)
-    // audioPlayer.play();
   }
 
   void reset() {
@@ -219,14 +215,6 @@ class PixelAdventure extends FlameGame
 
   void quit() {
     // TODO implement game quit
-  }
-
-  @override
-  void onDispose() {
-    print('onDispose');
-    audioPlayer.dispose();
-    musicPlayer.dispose();
-    super.onDispose();
   }
 
   void togglePauseState() {
