@@ -13,7 +13,7 @@ import 'package:pixel_adventure/pixel_adventure.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -39,6 +39,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.inactive:
         print('app inactive');
+        // game.pauseMusic();
         break;
       case AppLifecycleState.paused:
         print('app paused');
@@ -64,22 +65,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    print('main dispose');
     WidgetsBinding.instance.removeObserver(this);
-    game.musicPlayer.dispose();
-    game.audioPlayer.dispose();
     super.dispose();
   }
 
   void onFocus(Event e) {
     didChangeAppLifecycleState(AppLifecycleState.resumed);
+    game.lifecycleStateChange(AppLifecycleState.resumed);
   }
 
   void onBlur(Event e) async {
     didChangeAppLifecycleState(AppLifecycleState.inactive);
+    game.lifecycleStateChange(AppLifecycleState.inactive);
   }
 
   void onVisibilityChange(Event e) {
     didChangeAppLifecycleState(AppLifecycleState.hidden);
+    game.lifecycleStateChange(AppLifecycleState.hidden);
   }
 
   @override
