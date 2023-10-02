@@ -6,14 +6,13 @@ class SettingsOverlay extends StatelessWidget {
 
   const SettingsOverlay({super.key, required this.game});
 
+  static final buttonSizeMinimum =
+      MaterialStateProperty.all(const Size(120, 40));
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(color: Color.fromRGBO(10, 20, 60, 1)
-          // image: DecorationImage(
-          //     image: AssetImage('assets/images/Background/leafBorderBg.png'),
-          //     fit: BoxFit.contain)
-          ),
+      decoration: const BoxDecoration(color: Color.fromRGBO(10, 20, 60, 1)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 48.0),
         child: Column(
@@ -28,7 +27,7 @@ class SettingsOverlay extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Row(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Text(
                 'SFX:',
                 style: TextStyle(fontSize: 16, color: Colors.white),
@@ -40,6 +39,7 @@ class SettingsOverlay extends StatelessWidget {
                   // 'Sound FX',
                   label: Text(soundsOn ? 'Mute' : 'Unmute'),
                   icon: Icon(soundsOn ? Icons.volume_up : Icons.volume_off),
+                  style: ButtonStyle(minimumSize: buttonSizeMinimum),
                   onPressed: () => game.toggleSfx(),
                 ),
               ),
@@ -47,7 +47,7 @@ class SettingsOverlay extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Row(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Text(
                 'Music:',
                 style: TextStyle(fontSize: 16, color: Colors.white),
@@ -57,8 +57,10 @@ class SettingsOverlay extends StatelessWidget {
                 valueListenable: game.musicOn,
                 builder: (context, musicOn, child) => ElevatedButton.icon(
                   // 'Music',
+
                   label: Text(musicOn ? 'Mute' : 'Unmute'),
                   icon: Icon(musicOn ? Icons.music_note : Icons.music_off),
+                  style: ButtonStyle(minimumSize: buttonSizeMinimum),
                   onPressed: () => game.toggleMusic(),
                 ),
               ),
@@ -66,7 +68,7 @@ class SettingsOverlay extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Row(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Text(
                 'Controls:',
                 style: TextStyle(fontSize: 16, color: Colors.white),
@@ -79,6 +81,7 @@ class SettingsOverlay extends StatelessWidget {
                   // 'Controls',
                   label: Text(mobileControls ? 'Touch' : 'Keyboard'),
                   icon: Icon(mobileControls ? Icons.touch_app : Icons.keyboard),
+                  style: ButtonStyle(minimumSize: buttonSizeMinimum),
                   onPressed: () => game.toggleMobileControls(),
                 ),
               ),
