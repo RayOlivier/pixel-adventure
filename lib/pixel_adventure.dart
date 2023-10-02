@@ -66,7 +66,9 @@ class PixelAdventure extends FlameGame
   }
 
   void onFocus(html.Event e) {
-    if (initialInteraction && !audioManager.bgmPlayer.playing) {
+    if (initialInteraction &&
+        !audioManager.bgmPlayer.playing &&
+        musicOn.value) {
       audioManager.playMusic();
     }
   }
