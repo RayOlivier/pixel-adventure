@@ -5,8 +5,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 class AudioManager extends Component with HasGameRef<PixelAdventure> {
-  static String basePath = 'audio/';
-  static String musicPath = 'audio/music/';
+  static String basePath = 'assets/audio/';
+  static String musicPath = 'assets/audio/music/';
 
   final _audioPlayer = AudioPlayer();
 
