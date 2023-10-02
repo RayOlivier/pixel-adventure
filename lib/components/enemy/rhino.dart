@@ -1,8 +1,8 @@
 import 'dart:async';
-// import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/utility/variables.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
@@ -27,8 +27,9 @@ class Rhino extends SpriteAnimationGroupComponent
   double moveDirection = 1;
   double targetDirection = 1;
 
-  bool playerSeen = false;
+  bool chargingAtPlayer = false;
   bool hitWall = false;
+  bool walkingBack = false;
   late final bool chargesLeft;
 
   final textureSize = Vector2(52, 34);
@@ -39,13 +40,16 @@ class Rhino extends SpriteAnimationGroupComponent
   late final SpriteAnimation _hitAnimation;
   late final SpriteAnimation _hitWallAnimation;
 
+  final AudioPlayer _wallHitPlayer = AudioPlayer();
+
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
     player = game.player;
 
-    // debugMode = true;
     _loadAllAnimations();
     _calculateRange();
+
+    _wallHitPlayer.setAsset('assets/audio/hit.wav');
     chargesLeft = offNeg > 0;
 
     spawnPosition = Vector2.copy(position);
@@ -56,8 +60,11 @@ class Rhino extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    _updateRhinoState();
-    _movement(dt);
+    if (!hitWall) {
+      // wait for hitWall anim to finish before updating again
+      _updateRhinoState();
+      _movement(dt);
+    }
     super.update(dt);
   }
 
@@ -101,38 +108,42 @@ class Rhino extends SpriteAnimationGroupComponent
         player.y < position.y + y;
   }
 
-  void _movement(dt) {
-    // set velocity to 0
+  void _movement(dt) async {
     velocity.x = 0;
 
-    // account for width of sprites when mirrored
-    // double playerOffset = (player.scale.x > 0) ? 0 : -player.width;
-    // double rhinoOffset = (scale.x > 0) ? 0 : -width;
-
-    int currentSpeed = hitWall ? walkSpeed : runSpeed;
+    int currentSpeed = walkingBack
+        ? walkSpeed
+        : chargingAtPlayer
+            ? runSpeed
+            : 0;
 
     if ((chargesLeft ? position.x <= rangeNeg : position.x >= rangePos) &&
         !hitWall) {
+      // hits ending wall
       _hitWall();
-    } else if (hitWall &&
+    } else if (walkingBack &&
         (chargesLeft
             ? (position.x - textureSize.x) >= spawnPosition.x
             : position.x <= spawnPosition.x)) {
+      // turn around at starting wall
       _resetCharge();
-    } else if (playerSeen) {
-      // charge in direction faced
-      velocity.x = targetDirection * currentSpeed;
     } else if (playerInRange()) {
       targetDirection = chargesLeft ? -1 : 1;
-      playerSeen = true;
+      chargingAtPlayer = true;
+      velocity.x = targetDirection * currentSpeed;
+    } else {
+      velocity.x = targetDirection * currentSpeed;
     }
 
     position.x += velocity.x * dt;
   }
 
-  _hitWall() async {
-    velocity.x = 0;
+  void _hitWall() async {
     current = RhinoState.hitWall;
+    hitWall = true;
+    chargingAtPlayer = false;
+    _wallHitPlayer.play();
+    _wallHitPlayer.load();
 
     await animationTicker?.completed;
     animationTicker
@@ -141,7 +152,9 @@ class Rhino extends SpriteAnimationGroupComponent
     targetDirection =
         chargesLeft ? 1 : -1; // walks back to the right if charges left
     velocity.x = targetDirection * walkSpeed;
-    hitWall = true;
+
+    hitWall = false;
+    walkingBack = true;
 
     flipHorizontallyAroundCenter();
   }
@@ -149,8 +162,9 @@ class Rhino extends SpriteAnimationGroupComponent
   void _resetCharge() {
     velocity.x = 0;
     hitWall = false;
-    playerSeen = false;
+    chargingAtPlayer = false;
     flipHorizontallyAroundCenter();
+    walkingBack = false;
   }
 
   void _updateRhinoState() {
@@ -158,7 +172,7 @@ class Rhino extends SpriteAnimationGroupComponent
   }
 
   void collidedWithPlayer() async {
-    //   // TODO allow player to kill rhino
+    // TODO allow player to kill rhino
 
     player.collidedWithEnemy();
     velocity = Vector2.zero();
