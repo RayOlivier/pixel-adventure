@@ -32,14 +32,14 @@ class Chicken extends SpriteAnimationGroupComponent
   late final SpriteAnimation _runAnimation;
   late final SpriteAnimation _hitAnimation;
 
-  final audioPlayer = AudioPlayer();
+  final _jumpOffPlayer = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
     player = game.player;
 
     add(RectangleHitbox(position: Vector2(4, 6), size: Vector2(24, 26)));
-    await audioPlayer.setAsset('assets/audio/jumpOffEnemy.wav');
+    await _jumpOffPlayer.setAsset('assets/audio/jumpOffEnemy.wav');
     _loadAllAnimations();
     _calculateRange();
     return super.onLoad();
@@ -122,7 +122,7 @@ class Chicken extends SpriteAnimationGroupComponent
   void collidedWithPlayer() async {
     if (player.velocity.y > 0 && player.y + player.height > position.y) {
       if (game.playSounds.value) {
-        audioPlayer.play(); // better for safari
+        _jumpOffPlayer.play(); // better for safari
       }
 
       gotStomped = true;
@@ -130,10 +130,9 @@ class Chicken extends SpriteAnimationGroupComponent
       player.velocity.y = -_bounceHeight;
       await animationTicker?.completed;
       removeFromParent();
-      audioPlayer.dispose();
+      _jumpOffPlayer.dispose();
     } else {
       player.collidedWithEnemy();
-      // game.audioManager.hitPlayer.play();
       velocity = Vector2.zero();
     }
   }

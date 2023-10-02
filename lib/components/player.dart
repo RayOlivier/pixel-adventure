@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pixel_adventure/components/enemy/rhino.dart';
 import 'package:pixel_adventure/components/level/checkpoint.dart';
 import 'package:pixel_adventure/components/enemy/chicken.dart';
@@ -59,20 +60,18 @@ class Player extends SpriteAnimationGroupComponent
   double fixedDeltaTime = 1 / 60; // targeting 60fps
   double accumulatedTime = 0;
 
-  // final audioPlayerJump = AudioPlayer();
-  // final audioPlayerHit = AudioPlayer();
-  // final audioPlayerDisappear = AudioPlayer();
+  final _audioPlayerHit = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
-    _loadAllAnimations();
-
     startingPosition = Vector2(position.x, position.y);
 
     add(RectangleHitbox(
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
         size: Vector2(hitbox.width, hitbox.height)));
+    _loadAllAnimations();
 
+    await _audioPlayerHit.setAsset('assets/audio/hit.wav');
     return super.onLoad();
   }
 
@@ -100,7 +99,7 @@ class Player extends SpriteAnimationGroupComponent
       Set<Vector2> intersectionPoints, PositionComponent other) {
     if (!reachedCheckpoint) {
       if (other is Fruit) other.collidedWithPlayer();
-      if (other is Saw) _respawn();
+      if (other is Saw) collidedWithEnemy();
       if (other is Checkpoint) _reachedCheckpoint();
       if (other is Chicken) other.collidedWithPlayer();
       if (other is Rhino) other.collidedWithPlayer();
@@ -266,8 +265,8 @@ class Player extends SpriteAnimationGroupComponent
 
   void _respawn() async {
     if (game.playSounds.value) {
-      // audioPlayerHit.play();
-      // await audioPlayerHit.setAsset('assets/audio/hit.wav');
+      _audioPlayerHit.play();
+      await _audioPlayerHit.load();
     }
     if (scale.x < 0) {
       flipHorizontallyAroundCenter();
@@ -319,7 +318,6 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void collidedWithEnemy() {
-    // game.audioManager.hitPlayer.play();
     _respawn();
   }
 
