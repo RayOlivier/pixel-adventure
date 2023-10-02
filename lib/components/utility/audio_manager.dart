@@ -5,16 +5,21 @@ import 'package:just_audio/just_audio.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 class AudioManager extends Component with HasGameRef<PixelAdventure> {
-  final bgmPlayer = AudioPlayer();
+  static String basePath = 'audio/';
+  static String musicPath = 'audio/music/';
+
   final _audioPlayer = AudioPlayer();
-  static String basePath = 'assets/audio/';
-  static String musicPath = 'assets/audio/music/';
-  final fruitCollectPlayer = SfxPlayer('${basePath}collectFruit.wav');
+
+  final bgmPlayer = AudioPlayer();
+
+  final hitPlayer = SfxPlayer('${basePath}hit.wav');
 
   @override
   FutureOr<void> onLoad() async {
     await bgmPlayer.setAsset('${musicPath}forest.mp3');
     bgmPlayer.setLoopMode(LoopMode.all);
+
+    hitPlayer.initialize();
 
     return super.onLoad();
   }
@@ -41,16 +46,23 @@ class AudioManager extends Component with HasGameRef<PixelAdventure> {
 
 // SFX Player for reused sounds
 class SfxPlayer {
-  static final _sfxPlayer = AudioPlayer();
+  final AudioPlayer _sfxPlayer = AudioPlayer();
   String assetPath;
 
   SfxPlayer(
     this.assetPath,
-  ) {
-    _sfxPlayer.setAsset(assetPath); // could cause issues without await
+  ) {}
+
+  get playerState {
+    return _sfxPlayer.playerState;
+  }
+
+  initialize() async {
+    await _sfxPlayer.setAsset(assetPath);
   }
 
   void play() {
+    print('sfx play, $assetPath');
     _sfxPlayer.play();
     _sfxPlayer.load(); // load to be played again
   }

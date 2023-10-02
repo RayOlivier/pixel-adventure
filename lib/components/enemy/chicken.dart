@@ -122,8 +122,7 @@ class Chicken extends SpriteAnimationGroupComponent
   void collidedWithPlayer() async {
     if (player.velocity.y > 0 && player.y + player.height > position.y) {
       if (game.playSounds.value) {
-        audioPlayer.play();
-        await audioPlayer.setAsset('assets/audio/jumpOffEnemy.wav');
+        audioPlayer.play(); // better for safari
       }
 
       gotStomped = true;
@@ -131,8 +130,10 @@ class Chicken extends SpriteAnimationGroupComponent
       player.velocity.y = -_bounceHeight;
       await animationTicker?.completed;
       removeFromParent();
+      audioPlayer.dispose();
     } else {
       player.collidedWithEnemy();
+      // game.audioManager.hitPlayer.play();
       velocity = Vector2.zero();
     }
   }

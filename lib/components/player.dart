@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/enemy/rhino.dart';
 import 'package:pixel_adventure/components/level/checkpoint.dart';
@@ -60,9 +59,9 @@ class Player extends SpriteAnimationGroupComponent
   double fixedDeltaTime = 1 / 60; // targeting 60fps
   double accumulatedTime = 0;
 
-  final audioPlayerJump = AudioPlayer();
-  final audioPlayerHit = AudioPlayer();
-  final audioPlayerDisappear = AudioPlayer();
+  // final audioPlayerJump = AudioPlayer();
+  // final audioPlayerHit = AudioPlayer();
+  // final audioPlayerDisappear = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
@@ -73,11 +72,6 @@ class Player extends SpriteAnimationGroupComponent
     add(RectangleHitbox(
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
         size: Vector2(hitbox.width, hitbox.height)));
-
-    // Load sound effect here
-    await audioPlayerJump.setAsset('assets/audio/jump.wav');
-    await audioPlayerHit.setAsset('assets/audio/hit.wav');
-    await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
 
     return super.onLoad();
   }
@@ -264,17 +258,6 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _playerJump(double dt) async {
-    print('player jump****');
-    // if (game.playSounds.value) {
-    //   print('jump source start: ${audioPlayerJump.audioSource.toString()}');
-    //   print('jump source start: ${audioPlayerJump.audioSource.hashCode}');
-    //   audioPlayerJump.play();
-    //   print(
-    //       'jump source after play: ${audioPlayerJump.audioSource.toString()}');
-    //   // await audioPlayerJump.setAsset('assets/audio/jump.wav');
-    //   await audioPlayerJump.load();
-    //   print('jump source after load:${audioPlayerJump.audioSource.toString()}');
-    // }
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
     isOnGround = false;
@@ -283,11 +266,14 @@ class Player extends SpriteAnimationGroupComponent
 
   void _respawn() async {
     if (game.playSounds.value) {
-      audioPlayerHit.play();
+      // audioPlayerHit.play();
       // await audioPlayerHit.setAsset('assets/audio/hit.wav');
-      await audioPlayerHit.load();
     }
-    const cantMoveDuration = Duration(milliseconds: 400);
+    if (scale.x < 0) {
+      flipHorizontallyAroundCenter();
+    }
+
+    const cantMoveDuration = Duration(milliseconds: 500);
     gotHit = true;
     current = PlayerState.hit;
 
@@ -310,9 +296,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _reachedCheckpoint() async {
     if (game.playSounds.value) {
-      audioPlayerDisappear.play();
-      // await audioPlayerDisappear.setAsset('assets/audio/disappear.wav');
-      await audioPlayerDisappear.load();
+      game.audioManager.playOnce('disappear.wav');
     }
     reachedCheckpoint = true;
     if (scale.x > 0) {
@@ -335,6 +319,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void collidedWithEnemy() {
+    // game.audioManager.hitPlayer.play();
     _respawn();
   }
 
