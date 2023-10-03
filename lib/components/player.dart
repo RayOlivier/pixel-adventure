@@ -260,7 +260,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _playerJump(double dt) async {
     _audioPlayerJump.play();
-    _audioPlayerJump.load();
+    await _audioPlayerJump.load();
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
     isOnGround = false;
