@@ -61,6 +61,7 @@ class Player extends SpriteAnimationGroupComponent
   double accumulatedTime = 0;
 
   final _audioPlayerHit = AudioPlayer();
+  final _audioPlayerJump = AudioPlayer();
 
   @override
   FutureOr<void> onLoad() async {
@@ -72,6 +73,7 @@ class Player extends SpriteAnimationGroupComponent
     _loadAllAnimations();
 
     await _audioPlayerHit.setAsset('assets/audio/hit.wav');
+    await _audioPlayerJump.setAsset('assets/audio/jump.wav');
     return super.onLoad();
   }
 
@@ -257,6 +259,8 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _playerJump(double dt) async {
+    _audioPlayerJump.play();
+    _audioPlayerJump.load();
     velocity.y = -_jumpForce;
     position.y += velocity.y * dt;
     isOnGround = false;
