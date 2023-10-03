@@ -12,14 +12,10 @@ class AudioManager extends Component with HasGameRef<PixelAdventure> {
 
   final bgmPlayer = AudioPlayer();
 
-  final hitPlayer = SfxPlayer('${basePath}hit.wav');
-
   @override
   FutureOr<void> onLoad() async {
     await bgmPlayer.setAsset('${musicPath}forest.mp3');
     bgmPlayer.setLoopMode(LoopMode.all);
-
-    hitPlayer.initialize();
 
     return super.onLoad();
   }
@@ -51,7 +47,9 @@ class SfxPlayer {
 
   SfxPlayer(
     this.assetPath,
-  ) {}
+  ) {
+    initialize();
+  }
 
   get playerState {
     return _sfxPlayer.playerState;
