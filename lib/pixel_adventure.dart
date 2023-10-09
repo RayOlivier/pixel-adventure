@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:html' as html;
-// import 'dart:html';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
@@ -24,9 +25,10 @@ class PixelAdventure extends FlameGame
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
-  late CameraComponent cam;
+  late CameraComponent cam = CameraComponent();
   late World world;
-  JumpButton jumpButton = JumpButton();
+  // JumpButton jumpButton = JumpButton();
+  late HudButtonComponent jumpButton;
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
 
@@ -83,8 +85,9 @@ class PixelAdventure extends FlameGame
 
   @override
   void onGameResize(Vector2 size) {
-    if (isLoaded && useMobileControls.value) {
-      jumpButton.updatePosition(newGameSize: size);
+    if (isLoaded && useMobileControls.value && cam.isLoaded) {
+      jumpButton.margin = EdgeInsets.only(
+          left: (cam.viewport.size.x - 96), top: (cam.viewport.size.y - 96));
     }
 
     super.onGameResize(size);
@@ -99,7 +102,6 @@ class PixelAdventure extends FlameGame
   }
 
   void toggleSfx() async {
-    print('toggling sfx');
     if (playSounds.value) {
       playSounds.value = false;
     } else {
@@ -126,15 +128,17 @@ class PixelAdventure extends FlameGame
     } else {
       useMobileControls.value = true;
       addMobileControls();
+      cam.viewport.add(jumpButton);
+      cam.viewport.add(joystick);
     }
   }
 
   void addMobileControls() {
-    addJoystick();
-    add(jumpButton);
+    createJoystick();
+    createJumpButton();
   }
 
-  void addJoystick() {
+  void createJoystick() {
     joystick = JoystickComponent(
         priority: 10,
         knob: SpriteComponent(
@@ -144,8 +148,24 @@ class PixelAdventure extends FlameGame
         background: SpriteComponent(
             sprite: Sprite(images.fromCache('HUD/Joystick.png'))),
         margin: const EdgeInsets.only(left: 32, bottom: 32));
+  }
 
-    add(joystick);
+  void createJumpButton() {
+    jumpButton = HudButtonComponent(
+      priority: 10,
+      onPressed: () {
+        player.hasJumped = true;
+      },
+      onReleased: () {
+        player.hasJumped = false;
+      },
+      button: SpriteComponent(
+          sprite: Sprite(images.fromCache('HUD/JumpButton.png'))),
+      margin: const EdgeInsets.only(
+          right: 32,
+          bottom:
+              32), //edge insets manually placed in _loadlevel due to inconsistency
+    );
   }
 
   void updateJoystick() {
@@ -184,8 +204,11 @@ class PixelAdventure extends FlameGame
     cam = CameraComponent.withFixedResolution(
         world: world, width: 640, height: 360);
     cam.viewfinder.anchor = Anchor.topLeft;
+    cam.viewport.debugMode = true;
 
     addAll([cam, world]);
+    cam.viewport.add(jumpButton);
+    cam.viewport.add(joystick);
   }
 
   void openSettings() {
@@ -208,7 +231,6 @@ class PixelAdventure extends FlameGame
       audioManager.playMusic();
     }
     overlays.remove('mainMenuOverlay');
-    // overlays.add('gameplayOverlay');
   }
 
   void reset() {
