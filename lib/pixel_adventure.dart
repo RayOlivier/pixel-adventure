@@ -33,7 +33,7 @@ class PixelAdventure extends FlameGame
   late JoystickComponent joystick;
 
   ValueNotifier<bool> playSounds = ValueNotifier(true);
-  ValueNotifier<bool> musicOn = ValueNotifier(true);
+  ValueNotifier<bool> musicOn = ValueNotifier(false);
   ValueNotifier<bool> useMobileControls = ValueNotifier(true);
 
   List<String> levelNames = ['level-01', 'level-02'];
