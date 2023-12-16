@@ -204,7 +204,7 @@ class PixelAdventure extends FlameGame
     cam = CameraComponent.withFixedResolution(
         world: world, width: 640, height: 360);
     cam.viewfinder.anchor = Anchor.topLeft;
-    cam.viewport.debugMode = true;
+    // cam.viewport.debugMode = true;
 
     addAll([cam, world]);
     cam.viewport.add(jumpButton);
